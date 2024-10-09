@@ -1,0 +1,65 @@
+header{
+  height: fit-content;
+  background-color: transparent;
+}
+
+html {
+  /* this makes sure the padding and the border is included in the box sizing */
+  overflow:hidden;
+
+}
+
+.sticky-header {
+  background-color: black;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 135px;
+  z-index: 100; /* Adjust as needed */
+}
+
+.content-container {
+  padding-top:0; /* Adjust this value based on the actual height of your header */
+  max-height: 100vh; /* Ensure that the container doesn't exceed the remaining viewport height */
+  overflow-y: auto; /* Add a vertical scrollbar if the content overflows */
+  margin-top:135px;
+  height: calc(100% - 135px);
+  position: relative;
+  width: 100%;
+  min-width: 100vw;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

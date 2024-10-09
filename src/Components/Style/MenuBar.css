@@ -1,0 +1,249 @@
+
+.navbar{
+  background-color: rgb(88, 77, 77);
+  position: sticky;
+  z-index: 1010; /* Adjust as needed */
+  margin-top: 5px;
+  margin-bottom: 5px;
+ 
+}
+
+@media  (max-width: 600px) {
+  .navbar {
+    border-radius: 3px;
+  }
+}
+
+@media(max-width:600px){
+  .Navbarlogo{
+    transform: scale(0.7);
+  }
+}
+
+
+.nav-link{
+    font-family: 'Roboto', sans-serif;
+    color: white !important;
+    transition: all 0.5s;
+    font-size:large;
+    font-weight:bold;
+    position: relative;
+  }
+
+
+  .nav-link::before{
+    content: "";
+    position: absolute;
+    bottom:0;
+    left:50%;
+    transform: translateX(-50%);
+    width:0;
+    height: 2px;
+    visibility: hidden;
+    background-color: #031926;
+    transition: 0.3s ease-in-out;
+  }
+
+  .navbar-toggle{
+    color:white;
+    border: none;
+  }
+
+
+  .burger{
+    color: white;
+    font-size: larger;
+  }
+
+  .burger:hover{
+    color:#F4E9CD;
+    transition: all 0.5s;
+  }
+
+  .navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler-icon:focus,.navbar-toggler {
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+  .fic{
+    padding: 4px;
+    background-color: white;
+    transition: all 0.5s;
+    width:100%;
+  }
+
+  .nav-link:hover::before{
+    width: 100%;
+    visibility: visible;
+  }
+
+.exlink{
+  margin-right: 3%;
+  background-color: white;
+  padding: 0.2%;
+  padding-left: 0.5%;
+  margin-left: 1%;
+  border: 2px solid ;
+  border-color:#031926 
+  
+}
+.extext{
+  color:black;
+  font-size: small;
+  text-decoration: none;
+}
+
+  .exlink:hover::before{
+    visibility: hidden;
+  }
+  .exlink:hover{
+    transform: scale(1.05);
+    transition: all 0.5s;
+  }
+
+ 
+
+  @media  (max-width: 991px) {
+    .nav-link:hover::before{
+      visibility: hidden;
+    }
+
+    .exlink{
+      margin-right: 5%;
+      margin-left: 0.5%;
+    }
+
+    .exlink:hover{
+      transform: scale(1.05);
+      transition: all 0.5s;
+    }
+    
+    #offcanvasNavbar{
+      background-color: #77ACA2;
+      border-radius: 100px 0 100px 100px;      
+      
+      overflow: visible;
+      height: 70%;
+      
+    }
+
+    .ctitle{
+      transform: translateX(50%);
+      color: white;
+      font-weight: bold;
+    }
+
+    .nav-link{
+      transform: translateX(22%);
+      font-size: large;
+    }
+
+    .exlink{
+      transform: translateX(0);
+      margin-right: 5%;
+      margin-left: 0.5%;
+      transition: all 0.5s;
+    }
+
+    .navmenu{
+      gap: 0;
+
+    }
+
+    .admin-panel-nav .dropdown-menu {
+      border: none;
+    }
+   
+  }
+
+  .nav-link:hover{
+    /*text-decoration: line-through;*/
+    transition: all 0.5s;
+    color: #031926 !important;
+  }
+
+  .navbar-text{
+    max-height:40px;
+    width:auto;
+    vertical-align:middle;
+  }
+  .userlist{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: left;
+  }
+  .useritem{
+    font-weight: bold;
+    position: relative;
+    cursor: pointer;
+
+  }
+  .useritem:hover{
+    color: #77ACA2;
+  }
+  .useritem::before{
+    content: "";
+    width: 0%;
+    height: 2px;
+    position: absolute;
+    left: 50%;
+    bottom: 0px;
+    transform: translateX(-50%);
+    background-color: #77ACA2;
+}
+.useritem:hover::before{
+    width: 100%;
+    transition: all 0.5s;
+}
+.logout{
+  color: red;
+}
+.useritem:hover{
+  color: #77ACA2;
+}
+.logout:hover{
+  color: red;
+  font-weight: bolder;
+  transition: all 0.5s ;
+}
+.logout::before{
+  content: "";
+  width: 0%;
+  height: 2px;
+  position: absolute;
+  left: 50%;
+  bottom: 0px;
+  transform: translateX(-50%);
+  background-color: red;
+}
+.logout:hover::before{
+  width: 100%;
+  transition: all 0.5s;
+}
+.usericon{
+  max-height:70px;
+  width:auto;
+  vertical-align:middle;
+}
+.usericoncontainer{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popupcontainer{
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
