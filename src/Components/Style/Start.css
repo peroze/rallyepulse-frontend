@@ -1,119 +1,133 @@
-html, body, #app, #app>div {
-    height: 100%;
-    background-color: black !important;
-  }
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
+  background-color: black !important;
+}
 
 .start-container {
-    display: flex;
-    background: black;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
 }
 
-.times{
-    width: 30%; 
-    background: black;
+.times {
+  width: 30%;
+  background: black;
+  height: 90vh;
+}
 
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  width: 30% !important;
+  border-left: 3px solid white !important;
+  border-right: 3px solid white !important;
+  padding: 20px;
 }
-.controls{
-    gap: 3%;
-    width: 50%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 30%;
-    align-items: center; 
-    border-left: 2px solid white;
-    border-right: 2px solid white;
-    height: 90vh;
-}
-.number{
-    width: 30%;
-    background: black;
-    color: white;
-    font-size: larger;
-    font-weight: bold;
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    height: 90px;
-    width: 90px;
-    text-align: center;
-    border: 1px solid #FFD43B;
-    color: #FFD43B;
-    border-radius: 50%;
-    font-size: 3rem;
-    cursor: pointer;
-}
-.startbuttom{
-    background: yellowgreen;
-    font-size: 3rem;
-    font-weight: bold;
-    width: 100%;
-    height: 90px;
-    color: #FFD43B;
-    margin: 2%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-radius: 5px;
-}
-.lines{
-    width: 350px;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center; 
-    margin-top: 2px;
-    gap: 7px;
-}
-.input{
-    border-bottom: 1px solid #FFD43B;
-    padding: 0;
-    height: 70%;
-    margin: 15px;
-    width: 100%;
-    text-align: center;
-}
-.input h1{
-    height: 100%;
-    color: white;
-    font-size: 3rem;
-}
-.time{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
-    height: 90vh;
-    flex-wrap: wrap;
-    text-align: center;
 
+.number {
+  color: #ffd43b !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  width: 90px;
+  text-align: center;
+  border: 1px solid #ffd43b;
+  font-weight: bold !important;
+  color: #ffd43b;
+  border-radius: 50%;
+  font-size: 3rem;
+  margin-top: 2%;
+  background-color: black !important;
+  padding: 0.5rem;
+  cursor: pointer;
 }
-.time .lines h1{
-    color: white !important;
-    font-size: 4rem;
-    margin: 0;
-    text-align: center;
-    
+
+.startbuttom {
+  height: 90px;
+  background: green;
+  color: #ffd43b !important;
+  margin-top: 2%;
+  padding: 0.5rem;
+  font-size: 3rem !important;
+  font-weight: bold !important;
+  width: 100%;
+  cursor: pointer;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
 }
-.hourbutton{
-    background: grey;
-    color: black;
-    font-size: 3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-    text-align: center;
-    border-radius: 5px;
-    gap: 5px;
-    width: 100%;
+
+.lines {
+  width: 350px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  gap: 10px !important;
 }
-.starthour{
-    width: 100%;
+
+.input {
+  border-bottom: 1px solid white;
+  padding: 0;
+  height: 70%;
+  margin: 15px;
+  width: 100%;
+  text-align: center;
 }
-.lines h1{
-    color: white !important;
+
+.input h1 {
+  height: 100%;
+  color: white;
+  font-size: 3rem;
+  margin: 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: 90vh;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.time .lines h1 {
+  color: white !important;
+  font-size: 4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.hourbutton {
+  background: grey;
+  color: black;
+  padding: 0.5rem;
+  font-size: 3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
+  width: 100%;
+}
+.starthour {
+  width: 100%;
+}
+.lines h1 {
+  color: white !important;
 }
