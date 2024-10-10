@@ -23,13 +23,14 @@ function Menubar() {
   return (
     <Navbar expand="lg" fixed="top" variant="light" className="m-0 p-2 navbar">
       <Container fluid>
-        <Navbar.Brand className="m-0" as={Link} to="/">
-          <img width="110" className="Navbarlogo" src={logo}></img>
+        <Navbar.Brand className="m-1" as={Link} to="/">
+          <img width="200" className="Navbarlogo" src={logo}></img>
         </Navbar.Brand>
         <Navbar.Toggle
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar">
+          aria-controls="offcanvasNavbar"
+        >
           <FontAwesomeIcon className="burger" icon={faFilm} />
         </Navbar.Toggle>
         <Navbar.Offcanvas id="offcanvasNavbar" placement="end">

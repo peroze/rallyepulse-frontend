@@ -23,12 +23,6 @@
     "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron-forge/plugin-webpack": "^7.5.0",
     "@electron/fuses": "^1.8.0",
-    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
-    "babel-loader": "^9.2.1",
-    "css-loader": "^6.11.0",
-    "electron": "32.1.2",
-    "node-loader": "^2.0.0",
-    "style-loader": "^3.3.4",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
@@ -45,13 +39,18 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
     "axios": "^1.6.7",
+    "babel-loader": "^9.2.1",
     "bootstrap": "^5.3.2",
+    "css-loader": "^6.11.0",
     "date-fns": "^3.6.0",
+    "electron": "32.1.2",
     "gsap": "^3.12.5",
     "imagekitio-react": "^3.0.0",
     "install": "^0.13.0",
     "jwt-decode": "^4.0.0",
+    "node-loader": "^2.0.0",
     "npm": "^10.4.0",
     "qr-scanner": "^1.4.2",
     "react": "^18.2.0",
@@ -66,9 +65,10 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "reactjs-popup": "^2.0.6",
+    "style-loader": "^3.3.4",
     "styled-components": "^6.1.8",
-    "web-vitals": "^2.1.4",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "web-vitals": "^2.1.4"
   },
   "keywords": [],
   "author": {
@@ -79,6 +79,7 @@
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-select": "^5.8.1"
   }
 }
