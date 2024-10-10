@@ -9,7 +9,7 @@ function App() {
     <div>
       <Router basename="/">
         <header>
-          <Menubar username="Username" />
+          <Menubar />
         </header>
         <Routes>
           <Route exact path="/" element={<Start />} />

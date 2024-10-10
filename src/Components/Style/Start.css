@@ -113,7 +113,7 @@ body,
 
 .hourbutton {
   background: grey;
-  color: black;
+  color: white !important;
   padding: 0.5rem;
   font-size: 3rem;
   cursor: pointer;
