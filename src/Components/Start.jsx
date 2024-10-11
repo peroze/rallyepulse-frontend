@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./Style/Start.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
-import Select from "react-select/base";
+import Select from "react-select";
 
 const Start = () => {
   const [input, setinput] = useState("#");
@@ -14,6 +14,7 @@ const Start = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+
   const [starts, setstarts] = useState([]);
 
   const options = [
@@ -21,6 +22,7 @@ const Start = () => {
     { value: 2, label: "Lamia" },
     { value: 3, label: "Igoumenitsa" },
   ];
+
   const styles = {
     control: (base, state) => ({
       ...base,
@@ -66,6 +68,7 @@ const Start = () => {
       color: "white",
     }),
   };
+
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
@@ -86,7 +89,11 @@ const Start = () => {
 
   function uptime() {
     if (startminute + 1 > 59) {
-      setstarthour((prev) => prev + 1);
+      if (starthour + 1 == 24) {
+        setstarthour(0);
+      } else {
+        setstarthour((prev) => prev + 1);
+      }
       setstartminute(0);
     } else {
       setstartminute((prev) => prev + 1);
@@ -95,14 +102,24 @@ const Start = () => {
 
   function downtime() {
     if (startminute - 1 < 0) {
-      setstarthour((prev) => prev - 1);
-      setstartminute(59);
+      if (new Date().getMinutes() < 59) {
+        if (starthour - 1 == -1) {
+          starthour = 23;
+        } else {
+          setstarthour((prev) => prev - 1);
+        }
+        setstartminute(59);
+      }
     } else {
-      if (startminute - 1 > new Date().getMinutes() + 1) {
+      if (
+        startminute - 1 >= new Date().getMinutes() + 1 ||
+        starthour > new Date().getHours()
+      ) {
         setstartminute((prev) => prev - 1);
       }
     }
   }
+
   function issuestart() {
     const option = {
       hour: "2-digit",
@@ -115,11 +132,12 @@ const Start = () => {
     t.setMinutes(startminute);
     t.setSeconds(0);
     const currentTime = t.toLocaleTimeString("en-US", option);
-    starts.push({
+    starts.unshift({
       no: input.substring(1),
       time: currentTime,
       timevariable: t,
     });
+    uptime();
   }
 
   setInterval(() => {
@@ -141,8 +159,8 @@ const Start = () => {
     }
     settime(hours + ":" + minutes + ":" + seconds);
     if (seconds == 0) {
-      if (startminute - minutes2 <= 0) {
-        if (minutes2 == 59) {
+      if (startminute - minutes2 == 0) {
+        if (minutes2 + 1 > 59) {
           hours2 = hours2 + 1;
           minutes2 = 0;
         } else {
@@ -153,6 +171,7 @@ const Start = () => {
       }
     }
   }, 1000);
+
   return (
     <div className="start-container">
       <div className="times">
@@ -161,51 +180,49 @@ const Start = () => {
             <div className="names">No</div>
             <div className="stimes">Start Time</div>
           </div>
-          {starts.map((start) => {
-            if (
-              start.timevariable.getHours() < new Date().getHours() ||
-              (start.timevariable.getHours() == new Date().getHours() &&
-                start.timevariable.getMinutes() <= new Date().getMinutes())
-            ) {
-              return (
-                <div className="blines" key={start.no}>
-                  <div
-                    className="names"
-                    style={{ color: "white" }}
-                    id={"name" + start.no}
-                  >
-                    {start.no}
+          <div className="timeboard">
+            {starts.map((start) => {
+              if (
+                start.timevariable.getHours() < new Date().getHours() ||
+                (start.timevariable.getHours() == new Date().getHours() &&
+                  start.timevariable.getMinutes() <= new Date().getMinutes())
+              ) {
+                return (
+                  <div className="blines" key={start.no}>
+                    <div
+                      className="names"
+                      style={{ color: "white" }}
+                      id={"name" + start.no}>
+                      {start.no}
+                    </div>
+                    <div
+                      className="stimes"
+                      style={{ color: "white" }}
+                      id={"stimes" + start.time}>
+                      {start.time}
+                    </div>
                   </div>
-                  <div
-                    className="stimes"
-                    style={{ color: "white" }}
-                    id={"stimes" + start.time}
-                  >
-                    {start.time}
+                );
+              } else {
+                return (
+                  <div className="blines" key={start.no}>
+                    <div
+                      className="names"
+                      style={{ color: "yellowgreen" }}
+                      id={"name" + start.no}>
+                      {start.no}
+                    </div>
+                    <div
+                      className="stimes"
+                      style={{ color: "yellowgreen" }}
+                      id={"stimes" + start.time}>
+                      {start.time}
+                    </div>
                   </div>
-                </div>
-              );
-            } else {
-              return (
-                <div className="blines" key={start.no}>
-                  <div
-                    className="names"
-                    style={{ color: "yellowgreen" }}
-                    id={"name" + start.no}
-                  >
-                    {start.no}
-                  </div>
-                  <div
-                    className="stimes"
-                    style={{ color: "yellowgreen" }}
-                    id={"stimes" + start.time}
-                  >
-                    {start.time}
-                  </div>
-                </div>
-              );
-            }
-          })}
+                );
+              }
+            })}
+          </div>
         </div>
       </div>
       <div className="controls">
@@ -222,24 +239,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -248,24 +262,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -274,24 +285,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -300,8 +308,7 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -311,8 +318,7 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -329,6 +335,8 @@ const Start = () => {
             placeholder="Select special stage"
             options={options}
             styles={styles}
+            onChange={handlechange}
+            className="select"
           />
         </div>
         <div className="lines">

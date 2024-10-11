@@ -3,6 +3,8 @@ import Menubar from "./Components/Menubar.jsx";
 import Home from "./Components/Home.jsx";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Start from "./Components/Start.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   return (

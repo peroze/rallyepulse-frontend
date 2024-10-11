@@ -16,6 +16,11 @@ import Popup from "reactjs-popup";
 import logo from "../Images/Logo.png";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
+import { faCircleStop } from "@fortawesome/free-solid-svg-icons";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { faHammer } from "@fortawesome/free-solid-svg-icons";
 
 function Menubar() {
   const navigate = useNavigate();
@@ -29,8 +34,7 @@ function Menubar() {
         <Navbar.Toggle
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar"
-        >
+          aria-controls="offcanvasNavbar">
           <FontAwesomeIcon className="burger" icon={faFilm} />
         </Navbar.Toggle>
         <Navbar.Offcanvas id="offcanvasNavbar" placement="end">
@@ -39,20 +43,51 @@ function Menubar() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="ms-auto gap-3 offcanvas-body " id="offcanvasNavbar">
-              <Nav.Link as={Link} to="/">
-                Home
-              </Nav.Link>
               <Nav.Link as={Link} to="/start">
-                Mode Start
+                <FontAwesomeIcon
+                  icon={faFlag}
+                  style={{
+                    color: "#ffffff",
+                    marginRight: "5px",
+                    fontSize: "40px",
+                    transform: "rotate(10deg)",
+                  }}
+                />{" "}
+                <a className="mbtext">Start Control</a>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
-                Mode Finish
+                <FontAwesomeIcon
+                  icon={faFlagCheckered}
+                  style={{
+                    color: "#ffffff",
+                    marginRight: "5px",
+                    fontSize: "40px",
+                    transform: "rotate(10deg)",
+                  }}
+                />
+                <a className="mbtext">Finish Control</a>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
-                Mode Stop
+                <FontAwesomeIcon
+                  icon={faCircleStop}
+                  style={{
+                    color: "#ffffff",
+                    marginRight: "5px",
+                    fontSize: "40px",
+                  }}
+                />
+                <a className="mbtext">Stop Control</a>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
-                Mode Admin
+                <FontAwesomeIcon
+                  icon={faHammer}
+                  style={{
+                    color: "#ffffff",
+                    marginRight: "5px",
+                    fontSize: "40px",
+                  }}
+                />
+                <a className="mbtext">Administrator</a>
               </Nav.Link>
             </Nav>
           </Offcanvas.Body>
