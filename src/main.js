@@ -24,6 +24,30 @@ const createWindow = () => {
   mainWindow.maximize();
   mainWindow.resizable=false;
   mainWindow.show()
+
+  mainWindow.webContents.on('select-bluetooth-device', (event, deviceList, callback) => {
+    //console.log('Searching', device.deviceName);
+    event.preventDefault()
+    selectBluetoothCallback = callback
+    const result = deviceList.find((device) => {
+      //console.log('Selecting device:', device.deviceName);
+      return true;
+    })
+    if (result) {
+      callback(result.deviceId)
+    } else {
+      console.log('No Device found');      
+    }
+  })
+ 
+  ipcMain.on('cancel-bluetooth-request', (event) => {
+    selectBluetoothCallback('')
+  })
+ 
+  ipcMain.on('bluetooth-pairing-response', (event, response) => {
+    bluetoothPinCallback(response)
+  })
+ 
  
 
   // and load the index.html of the app.
@@ -59,3 +83,4 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+

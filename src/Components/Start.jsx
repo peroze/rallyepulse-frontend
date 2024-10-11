@@ -16,6 +16,8 @@ const Start = () => {
   };
 
   const [starts, setstarts] = useState([]);
+  const [unreceived, setunreceived] = useState([]);
+
 
   const options = [
     { value: 1, label: "Eleftherochori" },
@@ -120,7 +122,8 @@ const Start = () => {
     }
   }
 
-  function issuestart() {
+  async function issuestart() {
+    try{
     const option = {
       hour: "2-digit",
       minute: "2-digit",
@@ -137,7 +140,48 @@ const Start = () => {
       time: currentTime,
       timevariable: t,
     });
+    unreceived.push(input.substring(1));
     uptime();
+
+    const devicepromise = navigator.bluetooth.requestDevice({
+      filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+    });
+
+
+ const timeoutpromise = new Promise ((_,reject) => {
+  setTimeout(()=>{
+      console.log("Device not found.")
+      reject(new Error("Device not found."))
+
+
+  },t.getTime()-new Date().getTime() - 10000)
+ })
+ const device = await Promise.race([devicepromise,timeoutpromise]);
+ const server = await device.gatt.connect();
+ const service = await server.getPrimaryService("00001805-0000-1000-8000-00805f9b34fb");
+ const characteristics = await service.getCharacteristic("00002a2b-0000-1000-8000-00805f9b34fb");
+ const characteristics2 = await service.getCharacteristic("00002a37-0000-1000-8000-00805f9b34fb");
+ const value = await characteristics2.readValue();
+ 
+ if (value.getUint8(0) != input.substring(1)) {
+    return;
+ } 
+
+console.log("Number matched");
+
+const encoder = new TextEncoder();
+const timedata = encoder.encode(currentTime);
+await characteristics.writeValue(timedata);
+console.log("Time has been sent.", currentTime);
+
+var array = [...unreceived];
+array.splice(unreceived.indexOf(input.substring(1)),1);
+await server.disconnect();
+console.log("Disconnected from server.");
+return;
+} catch(error) {
+  console.error("Error", error);
+} 
   }
 
   setInterval(() => {
@@ -204,22 +248,41 @@ const Start = () => {
                   </div>
                 );
               } else {
-                return (
-                  <div className="blines" key={start.no}>
-                    <div
-                      className="names"
-                      style={{ color: "yellowgreen" }}
-                      id={"name" + start.no}>
-                      {start.no}
+                if ( unreceived.includes(start.no)) {
+                  return (
+                    <div className="blines" key={start.no}>
+                      <div
+                        className="names"
+                        style={{ color: "purple" }}
+                        id={"name" + start.no}>
+                        {start.no}
+                      </div>
+                      <div
+                        className="stimes"
+                        style={{ color: "purple" }}
+                        id={"stimes" + start.time}>
+                        {start.time}
+                      </div>
                     </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "yellowgreen" }}
-                      id={"stimes" + start.time}>
-                      {start.time}
+                  );
+                }  else {
+                  return (
+                    <div className="blines" key={start.no}>
+                      <div
+                        className="names"
+                        style={{ color: "yellowgreen" }}
+                        id={"name" + start.no}>
+                        {start.no}
+                      </div>
+                      <div
+                        className="stimes"
+                        style={{ color: "yellowgreen" }}
+                        id={"stimes" + start.time}>
+                        {start.time}
+                      </div>
                     </div>
-                  </div>
-                );
+                  );
+                } 
               }
             })}
           </div>
