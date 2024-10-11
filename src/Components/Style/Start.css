@@ -185,3 +185,14 @@ body,
   overflow-y: scroll;
   height: 79vh;
 }
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffd43b;
+  border-radius: 10px;
+}
