@@ -22,7 +22,22 @@ const createWindow = () => {
       sandbox: false,
     },
   });
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
+    (details, callback) => {
+      callback({ requestHeaders: { Origin: "*", ...details.requestHeaders } });
+    }
+  );
 
+  mainWindow.webContents.session.webRequest.onHeadersReceived(
+    (details, callback) => {
+      callback({
+        responseHeaders: {
+          "Access-Control-Allow-Origin": ["*"],
+          ...details.responseHeaders,
+        },
+      });
+    }
+  );
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.maximize();
   mainWindow.resizable = false;

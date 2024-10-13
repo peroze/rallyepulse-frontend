@@ -1,5 +1,4 @@
 import axios from "axios";
-import TokenService from "./token.service.js";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -30,11 +29,15 @@ instance.interceptors.response.use(
         originalConfig._retry = true;
 
         try {
-          const rs = await instance.post("/auth/refresh-token",{}, {
-            headers: {
-              'Authorization': 'Bearer '+TokenService.getLocalRefreshToken()
+          const rs = await instance.post(
+            "/auth/refresh-token",
+            {},
+            {
+              headers: {
+                Authorization: "Bearer " + TokenService.getLocalRefreshToken(),
+              },
             }
-          });
+          );
 
           return instance(originalConfig);
         } catch (_error) {

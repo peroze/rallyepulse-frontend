@@ -24,6 +24,37 @@ import { faHammer } from "@fortawesome/free-solid-svg-icons";
 
 function Menubar() {
   const navigate = useNavigate();
+  const [show, setselect] = useState("start");
+
+  useEffect(() => {
+    select();
+  }, [show]);
+
+  function select() {
+    if (show === "start") {
+      document.getElementById("start").classList.add("selected");
+      document.getElementById("finish").classList.remove("selected");
+      document.getElementById("stop").classList.remove("selected");
+      document.getElementById("admin").classList.remove("selected");
+    } else if (show === "finish") {
+      document.getElementById("finish").classList.add("selected");
+      document.getElementById("start").classList.remove("selected");
+      document.getElementById("stop").classList.remove("selected");
+      document.getElementById("admin").classList.remove("selected");
+    } else if (show === "stop") {
+      document.getElementById("stop").classList.add("selected");
+      document.getElementById("start").classList.remove("selected");
+      document.getElementById("finish").classList.remove("selected");
+      document.getElementById("admin").classList.remove("selected");
+    } else if (show === "admin") {
+      document.getElementById("start").classList.remove("selected");
+      document.getElementById("finish").classList.remove("selected");
+      document.getElementById("stop").classList.remove("selected");
+      document.getElementById("admin").classList.add("selected");
+    }
+
+    return;
+  }
 
   return (
     <Navbar expand="lg" fixed="top" variant="light" className="m-0 p-2 navbar">
@@ -34,7 +65,8 @@ function Menubar() {
         <Navbar.Toggle
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar">
+          aria-controls="offcanvasNavbar"
+        >
           <FontAwesomeIcon className="burger" icon={faFilm} />
         </Navbar.Toggle>
         <Navbar.Offcanvas id="offcanvasNavbar" placement="end">
@@ -43,7 +75,15 @@ function Menubar() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="ms-auto gap-3 offcanvas-body " id="offcanvasNavbar">
-              <Nav.Link as={Link} to="/start">
+              <Nav.Link
+                as={Link}
+                to=""
+                id="start"
+                className="selected"
+                onClick={() => {
+                  setselect("start");
+                }}
+              >
                 <FontAwesomeIcon
                   icon={faFlag}
                   style={{
@@ -52,10 +92,17 @@ function Menubar() {
                     fontSize: "40px",
                     transform: "rotate(10deg)",
                   }}
-                />{" "}
+                />
                 <p className="mbtext">Start Control</p>
               </Nav.Link>
-              <Nav.Link as={Link} to="/">
+              <Nav.Link
+                as={Link}
+                to="/finish"
+                id="finish"
+                onClick={() => {
+                  setselect("finish");
+                }}
+              >
                 <FontAwesomeIcon
                   icon={faFlagCheckered}
                   style={{
@@ -67,7 +114,14 @@ function Menubar() {
                 />
                 <p className="mbtext">Finish Control</p>
               </Nav.Link>
-              <Nav.Link as={Link} to="/">
+              <Nav.Link
+                as={Link}
+                to="/stop"
+                id="stop"
+                onClick={() => {
+                  setselect("stop");
+                }}
+              >
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   style={{
@@ -78,7 +132,14 @@ function Menubar() {
                 />
                 <p className="mbtext">Stop Control</p>
               </Nav.Link>
-              <Nav.Link as={Link} to="/">
+              <Nav.Link
+                as={Link}
+                to="/admin"
+                id="admin"
+                onClick={() => {
+                  setselect("admin");
+                }}
+              >
                 <FontAwesomeIcon
                   icon={faHammer}
                   style={{

@@ -5,6 +5,7 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Start from "./Components/Start.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Finish from "./Components/Finish.jsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         </header>
         <Routes>
           <Route exact path="/" element={<Start />} />
+          <Route exact path="/finish" element={<Finish />} />
         </Routes>
       </Router>
     </div>

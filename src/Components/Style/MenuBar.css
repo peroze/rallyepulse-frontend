@@ -32,6 +32,19 @@
   border-radius: 20px;
 }
 
+.selected {
+  background-color: rgb(57, 57, 163);
+  margin: 10px;
+  font-family: "Roboto", sans-serif;
+  transition: all 0.5s;
+  font-size: large;
+  font-weight: bold;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+
 .nav-link .mbtext {
   font-size: small;
   font-weight: bold;

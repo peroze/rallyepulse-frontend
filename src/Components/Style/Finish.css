@@ -7,37 +7,50 @@ body,
   overflow-y: hidden;
 }
 
-.start-container {
+.finish-container {
   display: flex;
   width: 100%;
   height: 85vh;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 2%;
+  flex-wrap: nowrap;
 }
 
-.start-container .times {
+.finish-container .times {
   display: flex;
-  align-items: space-between;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap !important;
-  width: 30% !important;
+  flex-wrap: nowrap !important;
+  width: 50% !important;
   height: 85vh !important;
 }
 
-.start-container .controls {
+.finish-container .info {
+  display: flex;
+  border-left: 3px solid white;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  width: 20% !important;
+  height: 85vh !important;
+  flex-wrap: wrap;
+}
+
+.finish-container .controls {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap !important;
   width: 30% !important;
   border-left: 3px solid white !important;
-  border-right: 3px solid white !important;
   padding: 20px;
   height: 85vh;
 }
 
-.start-container .number {
+.finish-container .number {
   color: #ffd43b !important;
   display: flex;
   align-items: center;
@@ -56,13 +69,13 @@ body,
   cursor: pointer;
 }
 
-.start-container .startbuttom {
+.finish-container .startbuttom {
   height: 90px;
   background: green;
   color: #ffd43b !important;
   margin-top: 2%;
   padding: 0.5rem;
-  font-size: 3rem !important;
+  font-size: 1.5rem !important;
   font-weight: bold !important;
   width: 100%;
   cursor: pointer;
@@ -74,8 +87,8 @@ body,
   gap: 5px;
 }
 
-.start-container .lines {
-  width: 350px;
+.finish-container .lines {
+  width: 100% !important;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
@@ -84,7 +97,7 @@ body,
   gap: 10px !important;
 }
 
-.start-container .input {
+.finish-container .input {
   border-bottom: 1px solid white;
   padding: 0;
   height: 70%;
@@ -93,14 +106,14 @@ body,
   text-align: center;
 }
 
-.start-container .input h1 {
+.finish-container .input h1 {
   height: 100%;
   color: white;
   font-size: 3rem;
   margin: 0;
 }
 
-.start-container .time {
+.finish-container .time {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,14 +122,14 @@ body,
   flex-wrap: wrap;
   text-align: center;
 }
-.start-container .time .lines h1 {
+.finish-container .time .lines h1 {
   color: white !important;
   font-size: 4rem;
   margin: 0;
   text-align: center;
 }
 
-.start-container .hourbutton {
+.finish-container .hourbutton {
   background: grey;
   color: white !important;
   padding: 0.5rem;
@@ -130,29 +143,30 @@ body,
   gap: 5px;
   width: 100%;
 }
-.start-container .starthour {
+.finish-container .starthour {
   width: 100%;
 }
-.start-container .lines h1 {
+.finish-container .lines h1 {
   color: white !important;
 }
 
-.start-container .names {
+.finish-container .names {
   text-align: start;
   width: 30%;
   color: white;
   font-size: 1.5rem;
 }
 
-.start-container .stimes {
+.finish-container .stimes {
   text-align: start;
-  width: 35%;
+  width: 22%;
   color: white;
   font-size: 1.5rem;
 }
 
-.start-container .row {
-  height: 90vh;
+.finish-container .times .row {
+  height: 85vh;
+  width: 100%;
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
@@ -160,8 +174,8 @@ body,
   gap: 5px;
 }
 
-.start-container .blines {
-  width: 350px;
+.finish-container .blines {
+  width: 100%;
   display: flex;
   flex-wrap: wrap !important;
   justify-content: space-between;
@@ -170,13 +184,13 @@ body,
   gap: 10px !important;
 }
 
-.start-container .select {
+.finish-container .select {
   width: 100%;
   font-size: 2rem;
   background-color: #ffd43b;
 }
 
-.start-container .timeboard {
+.finish-container .timeboard {
   width: 400px !important;
   display: flex;
   flex-direction: column;
@@ -196,7 +210,7 @@ body,
   background: #ffd43b;
   border-radius: 10px;
 }
-.start-container .cross {
+.finish-container .cross {
   text-align: center;
   width: 10%;
   font-size: 1.5rem;

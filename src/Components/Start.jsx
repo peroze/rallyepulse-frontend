@@ -4,6 +4,8 @@ import styles from "./Style/Start.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import timekeepingService from "../Services/timekeeping.service";
 
 const Start = () => {
   const [input, setinput] = useState("#");
@@ -142,47 +144,58 @@ const Start = () => {
       unreceived.push(input.substring(1));
       uptime();
 
-      const devicepromise = navigator.bluetooth.requestDevice({
-        filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
-      });
-
-      const timeoutpromise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log("Device not found.");
-          reject(new Error("Device not found."));
-        }, t.getTime() - new Date().getTime() - 10000);
-      });
-      const device = await Promise.race([devicepromise, timeoutpromise]);
-
-      const server = await device.gatt.connect();
-      const service = await server.getPrimaryService(
-        "00001805-0000-1000-8000-00805f9b34fb"
+      await timekeepingService.start(
+        input.substring(1),
+        selectedOption,
+        t.getHours(),
+        t.getMinutes(),
+        t.getSeconds(),
+        0,
+        2
       );
-      const characteristics = await service.getCharacteristic(
-        "00002a2b-0000-1000-8000-00805f9b34fb"
-      );
-      const characteristics2 = await service.getCharacteristic(
-        "00002a37-0000-1000-8000-00805f9b34fb"
-      );
-      const value = await characteristics2.readValue();
-
-      if (value.getUint8(0) != input.substring(1)) {
-        return;
-      }
-
-      console.log("Number matched");
-
-      const encoder = new TextEncoder();
-      const timedata = encoder.encode(currentTime);
-      await characteristics.writeValue(timedata);
-      console.log("Time has been sent.", currentTime);
-
-      var array = [...unreceived];
-      array.splice(unreceived.indexOf(input.substring(1)), 1);
-      setunreceived(array);
-      await server.disconnect();
-      console.log("Disconnected from server.");
       return;
+
+      // const devicepromise = navigator.bluetooth.requestDevice({
+      //   filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+      // });
+
+      // const timeoutpromise = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     console.log("Device not found.");
+      //     reject(new Error("Device not found."));
+      //   }, t.getTime() - new Date().getTime() - 10000);
+      // });
+      // const device = await Promise.race([devicepromise, timeoutpromise]);
+
+      // const server = await device.gatt.connect();
+      // const service = await server.getPrimaryService(
+      //   "00001805-0000-1000-8000-00805f9b34fb"
+      // );
+      // const characteristics = await service.getCharacteristic(
+      //   "00002a2b-0000-1000-8000-00805f9b34fb"
+      // );
+      // const characteristics2 = await service.getCharacteristic(
+      //   "00002a37-0000-1000-8000-00805f9b34fb"
+      // );
+      // const value = await characteristics2.readValue();
+
+      // if (value.getUint8(0) != input.substring(1)) {
+      //   return;
+      // }
+
+      // console.log("Number matched");
+
+      // const encoder = new TextEncoder();
+      // const timedata = encoder.encode(currentTime);
+      // await characteristics.writeValue(timedata);
+      // console.log("Time has been sent.", currentTime);
+
+      // var array = [...unreceived];
+      // array.splice(unreceived.indexOf(input.substring(1)), 1);
+      // setunreceived(array);
+      // await server.disconnect();
+      // console.log("Disconnected from server.");
+      // return;
     } catch (error) {
       console.error("Error", error);
     }
@@ -227,6 +240,7 @@ const Start = () => {
           <div className="blines">
             <div className="names">No</div>
             <div className="stimes">Start Time</div>
+            <div className="cross">Delete</div>
           </div>
           <div className="timeboard">
             {starts.map((start) => {
@@ -240,15 +254,18 @@ const Start = () => {
                     <div
                       className="names"
                       style={{ color: "white" }}
-                      id={"name" + start.no}>
+                      id={"name" + start.no}
+                    >
                       {start.no}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + start.time}>
+                      id={"stimes" + start.time}
+                    >
                       {start.time}
                     </div>
+                    <div className="cross"></div>
                   </div>
                 );
               } else {
@@ -258,14 +275,24 @@ const Start = () => {
                       <div
                         className="names"
                         style={{ color: "purple" }}
-                        id={"name" + start.no}>
+                        id={"name" + start.no}
+                      >
                         {start.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "purple" }}
-                        id={"stimes" + start.time}>
+                        id={"stimes" + start.time}
+                      >
                         {start.time}
+                      </div>
+                      <div className="cross">
+                        <FontAwesomeIcon
+                          icon={faXmark}
+                          style={{
+                            color: "red",
+                          }}
+                        />
                       </div>
                     </div>
                   );
@@ -275,14 +302,24 @@ const Start = () => {
                       <div
                         className="names"
                         style={{ color: "yellowgreen" }}
-                        id={"name" + start.no}>
+                        id={"name" + start.no}
+                      >
                         {start.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "yellowgreen" }}
-                        id={"stimes" + start.time}>
+                        id={"stimes" + start.time}
+                      >
                         {start.time}
+                      </div>
+                      <div className="cross">
+                        <FontAwesomeIcon
+                          icon={faXmark}
+                          style={{
+                            color: "red",
+                          }}
+                        />
                       </div>
                     </div>
                   );
@@ -306,21 +343,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -329,21 +369,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -352,21 +395,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -375,7 +421,8 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -385,7 +432,8 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
