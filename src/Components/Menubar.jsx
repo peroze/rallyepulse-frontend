@@ -53,7 +53,7 @@ function Menubar() {
                     transform: "rotate(10deg)",
                   }}
                 />{" "}
-                <a className="mbtext">Start Control</a>
+                <p className="mbtext">Start Control</p>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
                 <FontAwesomeIcon
@@ -65,7 +65,7 @@ function Menubar() {
                     transform: "rotate(10deg)",
                   }}
                 />
-                <a className="mbtext">Finish Control</a>
+                <p className="mbtext">Finish Control</p>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
                 <FontAwesomeIcon
@@ -76,7 +76,7 @@ function Menubar() {
                     fontSize: "40px",
                   }}
                 />
-                <a className="mbtext">Stop Control</a>
+                <p className="mbtext">Stop Control</p>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
                 <FontAwesomeIcon
@@ -87,7 +87,7 @@ function Menubar() {
                     fontSize: "40px",
                   }}
                 />
-                <a className="mbtext">Administrator</a>
+                <p className="mbtext">Administrator</p>
               </Nav.Link>
             </Nav>
           </Offcanvas.Body>
