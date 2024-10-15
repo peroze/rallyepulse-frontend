@@ -7,25 +7,26 @@ body,
   overflow-y: hidden;
 }
 
-.finish-container {
+.stop-container {
   display: flex;
-  width: 100%;
+  width: 100vw;
   height: 85vh;
   justify-content: space-between;
   align-items: center;
   flex-wrap: nowrap;
+  border: 2px solid red;
 }
 
-.finish-container .times {
+.stop-container .times {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap !important;
-  width: 50% !important;
+  width: 70% !important;
   height: 85vh !important;
 }
 
-.finish-container .info {
+.stop-container .info {
   display: flex;
   border-left: 3px solid white;
   margin-left: 20px;
@@ -39,7 +40,7 @@ body,
   flex-wrap: wrap;
 }
 
-.finish-container .controls {
+.stop-container .controls {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +51,7 @@ body,
   height: 85vh;
 }
 
-.finish-container .number {
+.stop-container .number {
   color: #ffd43b !important;
   display: flex;
   align-items: center;
@@ -69,7 +70,7 @@ body,
   cursor: pointer;
 }
 
-.finish-container .startbuttom {
+.stop-container .startbuttom {
   height: 90px;
   background: green;
   color: #ffd43b !important;
@@ -87,7 +88,7 @@ body,
   gap: 5px;
 }
 
-.finish-container .lines {
+.stop-container .lines {
   width: 100% !important;
   display: flex;
   flex-wrap: nowrap;
@@ -97,7 +98,7 @@ body,
   gap: 10px !important;
 }
 
-.finish-container .input {
+.stop-container .input {
   border-bottom: 1px solid white;
   padding: 0;
   height: 70%;
@@ -106,14 +107,14 @@ body,
   text-align: center;
 }
 
-.finish-container .input h1 {
+.stop-container .input h1 {
   height: 100%;
   color: white;
   font-size: 3rem;
   margin: 0;
 }
 
-.finish-container .time {
+.stop-container .time {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,14 +123,14 @@ body,
   flex-wrap: wrap;
   text-align: center;
 }
-.finish-container .time .lines h1 {
+.stop-container .time .lines h1 {
   color: white !important;
   font-size: 4rem;
   margin: 0;
   text-align: center;
 }
 
-.finish-container .hourbutton {
+.stop-container .hourbutton {
   background: grey;
   color: white !important;
   padding: 0.5rem;
@@ -143,28 +144,28 @@ body,
   gap: 5px;
   width: 100%;
 }
-.finish-container .starthour {
+.stop-container .starthour {
   width: 100%;
 }
-.finish-container .lines h1 {
+.stop-container .lines h1 {
   color: white !important;
 }
 
-.finish-container .names {
+.stop-container .names {
   text-align: start;
   width: 30%;
   color: white;
   font-size: 1.5rem;
 }
 
-.finish-container .stimes {
+.stop-container .stimes {
   text-align: start;
   width: 22%;
   color: white;
   font-size: 1.5rem;
 }
 
-.finish-container .times .row {
+.stop-container .times .row {
   height: 85vh;
   width: 100%;
   display: flex;
@@ -174,7 +175,7 @@ body,
   gap: 5px;
 }
 
-.finish-container .blines {
+.stop-container .blines {
   width: 100%;
   display: flex;
   flex-wrap: wrap !important;
@@ -184,13 +185,13 @@ body,
   gap: 10px !important;
 }
 
-.finish-container .select {
+.stop-container .select {
   width: 100%;
   font-size: 2rem;
   background-color: #ffd43b;
 }
 
-.finish-container .timeboard {
+.stop-container .timeboard {
   width: 100% !important;
   display: flex;
   flex-direction: column;
@@ -210,7 +211,7 @@ body,
   background: #ffd43b;
   border-radius: 10px;
 }
-.finish-container .cross {
+.stop-container .cross {
   text-align: center;
   width: 10%;
   font-size: 1.5rem;

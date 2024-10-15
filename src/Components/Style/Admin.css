@@ -7,50 +7,37 @@ body,
   overflow-y: hidden;
 }
 
-.finish-container {
+.admin-container {
   display: flex;
   width: 100%;
   height: 85vh;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-
-.finish-container .times {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  flex-wrap: nowrap !important;
-  width: 50% !important;
-  height: 85vh !important;
+  align-items: center;
+  gap: 2%;
 }
 
-.finish-container .info {
+.admin-container .times {
   display: flex;
-  border-left: 3px solid white;
-  margin-left: 20px;
-  margin-right: 20px;
-  padding: 10px;
-  align-items: center;
+  align-items: space-between;
   justify-content: center;
   flex-wrap: wrap !important;
-  width: 20% !important;
+  width: 30% !important;
   height: 85vh !important;
-  flex-wrap: wrap;
 }
 
-.finish-container .controls {
+.admin-container .controls {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap !important;
   width: 30% !important;
   border-left: 3px solid white !important;
+  border-right: 3px solid white !important;
   padding: 20px;
   height: 85vh;
 }
 
-.finish-container .number {
+.admin-container .number {
   color: #ffd43b !important;
   display: flex;
   align-items: center;
@@ -69,13 +56,13 @@ body,
   cursor: pointer;
 }
 
-.finish-container .startbuttom {
+.admin-container .startbuttom {
   height: 90px;
   background: green;
   color: #ffd43b !important;
   margin-top: 2%;
   padding: 0.5rem;
-  font-size: 1.5rem !important;
+  font-size: 3rem !important;
   font-weight: bold !important;
   width: 100%;
   cursor: pointer;
@@ -87,8 +74,8 @@ body,
   gap: 5px;
 }
 
-.finish-container .lines {
-  width: 100% !important;
+.admin-container .lines {
+  width: 350px;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
@@ -97,7 +84,7 @@ body,
   gap: 10px !important;
 }
 
-.finish-container .input {
+.admin-container .input {
   border-bottom: 1px solid white;
   padding: 0;
   height: 70%;
@@ -106,14 +93,14 @@ body,
   text-align: center;
 }
 
-.finish-container .input h1 {
+.admin-container .input h1 {
   height: 100%;
   color: white;
   font-size: 3rem;
   margin: 0;
 }
 
-.finish-container .time {
+.admin-container .time {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,14 +109,14 @@ body,
   flex-wrap: wrap;
   text-align: center;
 }
-.finish-container .time .lines h1 {
+.admin-container .time .lines h1 {
   color: white !important;
   font-size: 4rem;
   margin: 0;
   text-align: center;
 }
 
-.finish-container .hourbutton {
+.admin-container .hourbutton {
   background: grey;
   color: white !important;
   padding: 0.5rem;
@@ -143,30 +130,29 @@ body,
   gap: 5px;
   width: 100%;
 }
-.finish-container .starthour {
+.admin-container .starthour {
   width: 100%;
 }
-.finish-container .lines h1 {
+.admin-container .lines h1 {
   color: white !important;
 }
 
-.finish-container .names {
+.admin-container .names {
   text-align: start;
   width: 30%;
   color: white;
   font-size: 1.5rem;
 }
 
-.finish-container .stimes {
+.admin-container .stimes {
   text-align: start;
-  width: 22%;
+  width: 35%;
   color: white;
   font-size: 1.5rem;
 }
 
-.finish-container .times .row {
-  height: 85vh;
-  width: 100%;
+.admin-container .row {
+  height: 90vh;
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
@@ -174,8 +160,8 @@ body,
   gap: 5px;
 }
 
-.finish-container .blines {
-  width: 100%;
+.admin-container .blines {
+  width: 350px;
   display: flex;
   flex-wrap: wrap !important;
   justify-content: space-between;
@@ -184,14 +170,14 @@ body,
   gap: 10px !important;
 }
 
-.finish-container .select {
+.admin-container .select {
   width: 100%;
   font-size: 2rem;
   background-color: #ffd43b;
 }
 
-.finish-container .timeboard {
-  width: 100% !important;
+.admin-container .timeboard {
+  width: 400px !important;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -210,7 +196,7 @@ body,
   background: #ffd43b;
   border-radius: 10px;
 }
-.finish-container .cross {
+.admin-container .cross {
   text-align: center;
   width: 10%;
   font-size: 1.5rem;

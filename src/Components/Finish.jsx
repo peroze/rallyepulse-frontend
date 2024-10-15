@@ -9,7 +9,14 @@ import timekeepingService from "../Services/timekeeping.service";
 
 const Finish = () => {
   const [input, setinput] = useState("#");
-  const [time, settime] = useState(new Date().getTime());
+  const [finishnumber, setfinishnumber] = useState(-1);
+  const [time, settime] = useState(
+    new Date().getHours() +
+      ":" +
+      new Date().getMinutes() +
+      ":" +
+      new Date().getSeconds()
+  );
   const [finishes, setfinishes] = useState([]);
   const [unreceived, setunreceived] = useState([]);
   const handlechange = (selectedOption) => {
@@ -61,6 +68,52 @@ const Finish = () => {
       color: "white",
     }),
   };
+
+  async function StartBluetooth() {
+    // const device = navigator.bluetooth
+    //   .requestDevice({
+    //     filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+    //   })
+    //   .then(async (device) => {
+    //     const server = await device.gatt.connect();
+    //     const service = await server.getPrimaryService(
+    //       "00001805-0000-1000-8000-00805f9b34fb"
+    //     );
+    //     const characteristics2 = await service.getCharacteristic(
+    //       "00002a37-0000-1000-8000-00805f9b34fb"
+    //     );
+    //     const value = await characteristics2.readValue();
+    //     setfinishnumber(value.getUint8(0));
+    //     console.log("Number matched");
+    //     await server.disconnect();
+    //     console.log("Disconnected from server.");
+    //     return;
+    //   });
+
+    return;
+  }
+
+  function setNumber() {
+    setfinishnumber(input.substring(1));
+    FinishCar("17:25:35");
+  }
+
+  function FinishCar(car_time) {
+    if (finishnumber === -1) {
+      return;
+    } else {
+      finishes.unshift({
+        no: finishnumber,
+        time: car_time,
+        start: car_time,
+        stop: car_time,
+      });
+      setfinishnumber(-1);
+      StartBluetooth();
+    }
+
+    return;
+  }
 
   const options = [
     { value: 1, label: "Eleftherochori" },
@@ -117,9 +170,23 @@ const Finish = () => {
                     <div
                       className="stimes"
                       style={{ color: "white" }}
+                      id={"stimes" + finish.start}
+                    >
+                      {finish.start}
+                    </div>
+                    <div
+                      className="stimes"
+                      style={{ color: "white" }}
                       id={"stimes" + finish.time}
                     >
                       {finish.time}
+                    </div>
+                    <div
+                      className="stimes"
+                      style={{ color: "white" }}
+                      id={"stimes" + finish.stop}
+                    >
+                      {finish.stop}
                     </div>
                   </div>
                 );
@@ -267,7 +334,7 @@ const Finish = () => {
           </div>
         </div>
         <div className="lines">
-          <div className="startbuttom" onClick={issuefinish}>
+          <div className="startbuttom" onClick={setNumber}>
             Set Competitor Number
           </div>
         </div>

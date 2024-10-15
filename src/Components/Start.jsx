@@ -9,7 +9,13 @@ import timekeepingService from "../Services/timekeeping.service";
 
 const Start = () => {
   const [input, setinput] = useState("#");
-  const [time, settime] = useState(new Date().getTime());
+  const [time, settime] = useState(
+    new Date().getHours() +
+      ":" +
+      new Date().getMinutes() +
+      ":" +
+      new Date().getSeconds()
+  );
   const [starthour, setstarthour] = useState(new Date().getHours());
   const [startminute, setstartminute] = useState(new Date().getMinutes() + 1);
   const [start, setstart] = useState(starthour + ":" + startminute);
