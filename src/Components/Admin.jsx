@@ -407,7 +407,7 @@ const Admin = () => {
       <div className="time">
         <div className="lines">
           <Select
-            placeholder="Select special stage"
+            placeholder="Select Special Stage"
             options={options}
             styles={styles}
             onChange={handlechange}
