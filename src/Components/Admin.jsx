@@ -21,7 +21,7 @@ const Admin = () => {
   const [startsecond, setstartsecond] = useState(new Date().getSeconds());
   const [startmilli, setstartmilli] = useState(new Date().getMilliseconds());
   const [start, setstart] = useState(
-    starthour + ":" + startminute + ":" + startsecond + ":" + startmilli
+    starthour + ":" + startminute + ":" + "00" + ":" + "00"
   );
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
@@ -98,15 +98,19 @@ const Admin = () => {
   useEffect(() => {
     if (startminute < 10) {
       if (starthour < 10) {
-        setstart("0" + starthour + ":0" + startminute);
+        setstart(
+          "0" + starthour + ":0" + startminute + ":" + 0 + 0 + ":" + 0 + 0
+        );
       } else {
-        setstart(starthour + ":0" + startminute);
+        setstart(starthour + ":0" + startminute + ":" + 0 + 0 + ":" + 0 + 0);
       }
     } else {
       if (starthour < 10) {
-        setstart("0" + starthour + ":" + startminute);
+        setstart(
+          "0" + starthour + ":" + startminute + ":" + 0 + 0 + ":" + 0 + 0
+        );
       } else {
-        setstart(starthour + ":" + startminute);
+        setstart(starthour + ":" + startminute + ":" + 0 + 0 + ":" + 0 + 0);
       }
     }
   }, [startminute]);
@@ -257,29 +261,25 @@ const Admin = () => {
                     <div
                       className="names"
                       style={{ color: "white" }}
-                      id={"name" + finish.no}
-                    >
+                      id={"name" + finish.no}>
                       {finish.no}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + finish.start}
-                    >
+                      id={"stimes" + finish.start}>
                       {finish.start}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + finish.time}
-                    >
+                      id={"stimes" + finish.time}>
                       {finish.time}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + finish.stop}
-                    >
+                      id={"stimes" + finish.stop}>
                       {finish.stop}
                     </div>
                   </div>
@@ -303,24 +303,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -329,24 +326,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -355,24 +349,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -381,8 +372,7 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -392,8 +382,7 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>

@@ -9,3 +9,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   bluetoothPairingResponse: (response) =>
     ipcRenderer.send("bluetooth-pairing-response", response),
 });
+
+contextBridge.exposeInMainWorld("request", {
+  request: (axios_request) => {
+    console.log(axios_request);
+    return ipcRenderer.invoke("request", axios_request);
+  },
+});

@@ -1,5 +1,7 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("node:path");
+const { app, BrowserWindow, protocol, ipcMain } = require("electron");
+import axios from "axios";
+//const path = require("node:path");
+//const fs = require("fs");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -61,20 +63,26 @@ const createWindow = () => {
     }
   );
 
-  ipcMain.on("cancel-bluetooth-request", (event) => {
-    selectBluetoothCallback("");
-  });
-
-  ipcMain.on("bluetooth-pairing-response", (event, response) => {
-    bluetoothPinCallback(response);
-  });
-
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
+ipcMain.on("cancel-bluetooth-request", (event) => {
+  selectBluetoothCallback("");
+});
+
+ipcMain.on("bluetooth-pairing-response", (event, response) => {
+  bluetoothPinCallback(response);
+});
+
+ipcMain.handle("request", async (event, axios_request) => {
+  const response = await axios(axios_request);
+  console.log(response);
+  return { data: response.data, status: response.status };
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

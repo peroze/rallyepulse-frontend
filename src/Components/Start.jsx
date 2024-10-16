@@ -22,15 +22,48 @@ const Start = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
-
   const [starts, setstarts] = useState([]);
   const [unreceived, setunreceived] = useState([]);
+  const [specialStages, setSpecialstages] = useState([]);
+  const [receive, setRecieve] = useState(false);
 
-  const options = [
+  useEffect(() => {
+    if (receive == false) {
+      setRecieve(receive + 1);
+      console.log(receive);
+      console.log("In Special Stages useEffect");
+      window.request
+        .request({
+          method: "GET",
+          url: "http://localhost:8080/api/specialstage/getspecialstages",
+        })
+        .then((response) => {
+          console.log("Special Stages received: ", response.data);
+          let stageslocal = response.data;
+          let stagecopy = [];
+          if (receive == false) {
+            setRecieve(true);
+            for (let i = 0; i < stageslocal.length; i++) {
+              console.log("Stage: ", stageslocal[i].name);
+              stagecopy.push({
+                value: stageslocal[i].id,
+                label: stageslocal[i].name,
+              });
+            }
+            console.log("Stage copy: ", stagecopy);
+            setSpecialstages(stagecopy);
+          }
+        });
+      setRecieve(true);
+    }
+  }, [specialStages]);
+
+  /**const options = [
     { value: 1, label: "Eleftherochori" },
     { value: 2, label: "Lamia" },
     { value: 3, label: "Igoumenitsa" },
   ];
+  **/
 
   const styles = {
     control: (base, state) => ({
@@ -149,16 +182,22 @@ const Start = () => {
       });
       unreceived.push(input.substring(1));
       uptime();
-
-      await timekeepingService.start(
-        input.substring(1),
-        selectedOption,
-        t.getHours(),
-        t.getMinutes(),
-        t.getSeconds(),
-        0,
-        2
-      );
+      // ipcRenderer
+      //   .invoke("request", {
+      //     methof: "GET",
+      //     url: "http://localhost:8080/api/specialstage/getspecialstages",
+      //   })
+      //   .then((data) => console.log(data))
+      //   .catch((resp) => console.warn(resp));
+      // await timekeepingService.start(
+      //   input.substring(1),
+      //   selectedOption,
+      //   t.getHours(),
+      //   t.getMinutes(),
+      //   t.getSeconds(),
+      //   0,
+      //   2
+      // );
       return;
 
       // const devicepromise = navigator.bluetooth.requestDevice({
@@ -260,15 +299,13 @@ const Start = () => {
                     <div
                       className="names"
                       style={{ color: "white" }}
-                      id={"name" + start.no}
-                    >
+                      id={"name" + start.no}>
                       {start.no}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + start.time}
-                    >
+                      id={"stimes" + start.time}>
                       {start.time}
                     </div>
                     <div className="cross"></div>
@@ -281,15 +318,13 @@ const Start = () => {
                       <div
                         className="names"
                         style={{ color: "purple" }}
-                        id={"name" + start.no}
-                      >
+                        id={"name" + start.no}>
                         {start.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "purple" }}
-                        id={"stimes" + start.time}
-                      >
+                        id={"stimes" + start.time}>
                         {start.time}
                       </div>
                       <div className="cross">
@@ -308,15 +343,13 @@ const Start = () => {
                       <div
                         className="names"
                         style={{ color: "yellowgreen" }}
-                        id={"name" + start.no}
-                      >
+                        id={"name" + start.no}>
                         {start.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "yellowgreen" }}
-                        id={"stimes" + start.time}
-                      >
+                        id={"stimes" + start.time}>
                         {start.time}
                       </div>
                       <div className="cross">
@@ -349,24 +382,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -375,24 +405,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -401,24 +428,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -427,8 +451,7 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -438,8 +461,7 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -454,7 +476,7 @@ const Start = () => {
         <div className="lines">
           <Select
             placeholder="Select Special Stage"
-            options={options}
+            options={specialStages}
             styles={styles}
             onChange={handlechange}
             className="select"
