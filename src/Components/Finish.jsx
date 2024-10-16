@@ -22,6 +22,8 @@ const Finish = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+  const [specialStages, setSpecialstages] = useState([]);
+  const [receive, setRecieve] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const styles = {
     control: (base, state) => ({
@@ -69,6 +71,37 @@ const Finish = () => {
     }),
   };
 
+  useEffect(() => {
+    if (receive == false) {
+      setRecieve(receive + 1);
+      console.log(receive);
+      console.log("In Special Stages useEffect");
+      window.request
+        .request({
+          method: "GET",
+          url: "http://localhost:8080/api/specialstage/getspecialstages",
+        })
+        .then((response) => {
+          console.log("Special Stages received: ", response.data);
+          let stageslocal = response.data;
+          let stagecopy = [];
+          if (receive == false) {
+            setRecieve(true);
+            for (let i = 0; i < stageslocal.length; i++) {
+              console.log("Stage: ", stageslocal[i].name);
+              stagecopy.push({
+                value: stageslocal[i].id,
+                label: stageslocal[i].name,
+              });
+            }
+            console.log("Stage copy: ", stagecopy);
+            setSpecialstages(stagecopy);
+          }
+        });
+      setRecieve(true);
+    }
+  }, [specialStages]);
+
   async function StartBluetooth() {
     // const device = navigator.bluetooth
     //   .requestDevice({
@@ -102,14 +135,35 @@ const Finish = () => {
     if (finishnumber === -1) {
       return;
     } else {
-      finishes.unshift({
-        no: finishnumber,
-        time: car_time,
-        start: car_time,
-        stop: car_time,
-      });
-      setfinishnumber(-1);
-      StartBluetooth();
+      window.request
+        .request({
+          data: {
+            co_number: parseInt(input.substring(1)),
+            stage: selectedOption.value,
+            hour: car_time.getHours(),
+            minute: car_time.getMinutes(),
+            second: car_time.getSeconds(),
+            nano: car_time * 1000000,
+            decimal: 3,
+          },
+          method: "PUT",
+          url: "http://localhost:8080/api/time",
+        })
+        .then((response) => {
+          console.log("Time started: ", response.data);
+          finishes.unshift({
+            no: finishnumber,
+            time: car_time,
+            start: response.data.start_time,
+            stop: response.data.stop_time,
+          });
+          setfinishnumber(-1);
+          StartBluetooth();
+        })
+        .catch((error) => {
+          console.error("Error Uploading Start Time:", error);
+          throw error; // Rethrow the error to handle it in the caller
+        });
     }
 
     return;
@@ -120,10 +174,6 @@ const Finish = () => {
     { value: 2, label: "Lamia" },
     { value: 3, label: "Igoumenitsa" },
   ];
-
-  function issuefinish() {
-    return;
-  }
 
   setInterval(() => {
     let time = new Date();
@@ -217,8 +267,8 @@ const Finish = () => {
       <div className="info">
         <div className="lines">
           <Select
-            placeholder="Select special stage"
-            options={options}
+            placeholder="Select Special Stage"
+            options={specialStages}
             styles={styles}
             onChange={handlechange}
             className="select"

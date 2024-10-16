@@ -17,6 +17,8 @@ const Stop = () => {
   );
   const [finishes, setfinishes] = useState([]);
   const [unreceived, setunreceived] = useState([]);
+  const [specialStages, setSpecialstages] = useState([]);
+  const [receive, setRecieve] = useState(false);
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
@@ -66,6 +68,37 @@ const Stop = () => {
       color: "white",
     }),
   };
+
+  useEffect(() => {
+    if (receive == false) {
+      setRecieve(receive + 1);
+      console.log(receive);
+      console.log("In Special Stages useEffect");
+      window.request
+        .request({
+          method: "GET",
+          url: "http://localhost:8080/api/specialstage/getspecialstages",
+        })
+        .then((response) => {
+          console.log("Special Stages received: ", response.data);
+          let stageslocal = response.data;
+          let stagecopy = [];
+          if (receive == false) {
+            setRecieve(true);
+            for (let i = 0; i < stageslocal.length; i++) {
+              console.log("Stage: ", stageslocal[i].name);
+              stagecopy.push({
+                value: stageslocal[i].id,
+                label: stageslocal[i].name,
+              });
+            }
+            console.log("Stage copy: ", stagecopy);
+            setSpecialstages(stagecopy);
+          }
+        });
+      setRecieve(true);
+    }
+  }, [specialStages]);
 
   async function StartBluetooth(inputcarnumber, stoptime) {
     const devicepromise = navigator.bluetooth.requestDevice({
@@ -244,7 +277,7 @@ const Stop = () => {
         <div className="lines">
           <Select
             placeholder="Select special stage"
-            options={options}
+            options={specialStages}
             styles={styles}
             onChange={handlechange}
             className="select"

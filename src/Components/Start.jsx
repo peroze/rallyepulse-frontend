@@ -182,6 +182,28 @@ const Start = () => {
       });
       unreceived.push(input.substring(1));
       uptime();
+      window.request
+        .request({
+          data: {
+            co_number: parseInt(input.substring(1)),
+            stage: selectedOption.value,
+            hour: starthour,
+            minute: startminute,
+            second: 0,
+            nano: 0,
+            decimal: 3,
+          },
+          method: "POST",
+          url: "http://localhost:8080/api/time",
+        })
+        .then((response) => {
+          console.log("Time started: ", response.data);
+        })
+        .catch((error) => {
+          console.error("Error Uploading Start Time:", error);
+          throw error; // Rethrow the error to handle it in the caller
+        });
+
       // ipcRenderer
       //   .invoke("request", {
       //     methof: "GET",
@@ -299,13 +321,15 @@ const Start = () => {
                     <div
                       className="names"
                       style={{ color: "white" }}
-                      id={"name" + start.no}>
+                      id={"name" + start.no}
+                    >
                       {start.no}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + start.time}>
+                      id={"stimes" + start.time}
+                    >
                       {start.time}
                     </div>
                     <div className="cross"></div>
@@ -318,13 +342,15 @@ const Start = () => {
                       <div
                         className="names"
                         style={{ color: "purple" }}
-                        id={"name" + start.no}>
+                        id={"name" + start.no}
+                      >
                         {start.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "purple" }}
-                        id={"stimes" + start.time}>
+                        id={"stimes" + start.time}
+                      >
                         {start.time}
                       </div>
                       <div className="cross">
@@ -343,13 +369,15 @@ const Start = () => {
                       <div
                         className="names"
                         style={{ color: "yellowgreen" }}
-                        id={"name" + start.no}>
+                        id={"name" + start.no}
+                      >
                         {start.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "yellowgreen" }}
-                        id={"stimes" + start.time}>
+                        id={"stimes" + start.time}
+                      >
                         {start.time}
                       </div>
                       <div className="cross">
@@ -382,21 +410,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -405,21 +436,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -428,21 +462,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -451,7 +488,8 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -461,7 +499,8 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>

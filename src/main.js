@@ -79,6 +79,7 @@ ipcMain.on("bluetooth-pairing-response", (event, response) => {
 });
 
 ipcMain.handle("request", async (event, axios_request) => {
+  console.log(axios_request);
   const response = await axios(axios_request);
   console.log(response);
   return { data: response.data, status: response.status };

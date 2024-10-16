@@ -132,6 +132,23 @@ body,
 }
 .admin-container .starthour {
   width: 100%;
+  cursor: pointer;
+}
+.admin-container .hour {
+  width: 100%;
+}
+.admin-container .pressed {
+  background-color: rgb(70, 70, 163);
+  border-radius: 5px;
+}
+.admin-container .minute {
+  width: 100%;
+}
+.admin-container .second {
+  width: 100%;
+}
+.admin-container .milli {
+  width: 100%;
 }
 .admin-container .lines h1 {
   color: white !important;
@@ -139,14 +156,14 @@ body,
 
 .admin-container .names {
   text-align: start;
-  width: 30%;
+  width: 20%;
   color: white;
   font-size: 1.5rem;
 }
 
 .admin-container .stimes {
   text-align: start;
-  width: 35%;
+  width: 20%;
   color: white;
   font-size: 1.5rem;
 }

@@ -20,6 +20,7 @@ const Admin = () => {
   const [startminute, setstartminute] = useState(new Date().getMinutes() + 1);
   const [startsecond, setstartsecond] = useState(new Date().getSeconds());
   const [startmilli, setstartmilli] = useState(new Date().getMilliseconds());
+  const [pressed, setpressed] = useState("hour");
   const [start, setstart] = useState(
     starthour + ":" + startminute + ":" + "00" + ":" + "00"
   );
@@ -46,6 +47,8 @@ const Admin = () => {
     { value: "finish", label: "finish" },
     { value: "stop", label: "stop" },
   ];
+  const [specialStages, setSpecialstages] = useState([]);
+  const [receive, setRecieve] = useState(false);
 
   const styles = {
     control: (base, state) => ({
@@ -115,54 +118,106 @@ const Admin = () => {
     }
   }, [startminute]);
 
-  function uptime() {
-    if (startmilli + 1 < 999) {
-      if (startsecond + 1 > 59) {
-        if (startminute + 1 > 59) {
-          if (starthour + 1 == 24) {
-            setstarthour(0);
-          } else {
-            setstarthour((prev) => prev + 1);
+  function select(condition) {
+    console.log(condition);
+    if (condition === "hour") {
+      document.getElementById("hour").classList.add("pressed");
+      document.getElementById("minute").classList.remove("pressed");
+      document.getElementById("second").classList.remove("pressed");
+      document.getElementById("milli").classList.remove("pressed");
+    } else if (condition === "minute") {
+      document.getElementById("hour").classList.remove("pressed");
+      document.getElementById("minute").classList.add("pressed");
+      document.getElementById("second").classList.remove("pressed");
+      document.getElementById("milli").classList.remove("pressed");
+    } else if (condition === "second") {
+      document.getElementById("hour").classList.remove("pressed");
+      document.getElementById("minute").classList.remove("pressed");
+      document.getElementById("second").classList.add("pressed");
+      document.getElementById("milli").classList.remove("pressed");
+    } else if (condition === "milli") {
+      document.getElementById("hour").classList.remove("pressed");
+      document.getElementById("minute").classList.remove("pressed");
+      document.getElementById("second").classList.remove("pressed");
+      document.getElementById("milli").classList.add("pressed");
+    } else {
+      document.getElementById("hour").classList.remove("pressed");
+      document.getElementById("minute").classList.remove("pressed");
+      document.getElementById("second").classList.remove("pressed");
+      document.getElementById("milli").classList.remove("pressed");
+    }
+
+    return;
+  }
+
+  useEffect(() => {
+    if (receive == false) {
+      setRecieve(receive + 1);
+      console.log(receive);
+      console.log("In Special Stages useEffect");
+      window.request
+        .request({
+          method: "GET",
+          url: "http://localhost:8080/api/specialstage/getspecialstages",
+        })
+        .then((response) => {
+          console.log("Special Stages received: ", response.data);
+          let stageslocal = response.data;
+          let stagecopy = [];
+          if (receive == false) {
+            setRecieve(true);
+            for (let i = 0; i < stageslocal.length; i++) {
+              console.log("Stage: ", stageslocal[i].name);
+              stagecopy.push({
+                value: stageslocal[i].id,
+                label: stageslocal[i].name,
+              });
+            }
+            console.log("Stage copy: ", stagecopy);
+            setSpecialstages(stagecopy);
           }
-          setstartminute(0);
-        } else {
-          setstartminute((prev) => prev + 1);
-        }
-        setstartsecond(0);
-      } else {
+        });
+      setRecieve(true);
+    }
+  }, [specialStages]);
+
+  function uptime() {
+    if (pressed === "hour") {
+      if (starthour + 1 < 24) {
+        setstarthour((prev) => prev + 1);
+      }
+    } else if (pressed === "minute") {
+      if (startminute + 1 < 60) {
+        setstartminute((prev) => prev + 1);
+      }
+    } else if (pressed === "second") {
+      if (startsecond + 1 < 60) {
         setstartsecond((prev) => prev + 1);
       }
-      setstartmilli(0);
-    } else {
-      setstartmilli((prev) => prev + 1);
+    } else if (pressed === "milli") {
+      if (startmilli + 1 < 1000) {
+        setstartmilli((prev) => prev + 1);
+      }
     }
   }
 
   function downtime() {
-    if (startmilli - 1 < 0) {
-      if (startsecond - 1 < 0) {
-        if (startminute - 1 < 0) {
-          if (new Date().getMinutes() < 59) {
-            if (starthour - 1 == -1) {
-              starthour = 23;
-            } else {
-              setstarthour((prev) => prev - 1);
-            }
-            setstartminute(59);
-          }
-        } else {
-          if (
-            startminute - 1 >= new Date().getMinutes() + 1 ||
-            starthour > new Date().getHours()
-          ) {
-            setstartminute((prev) => prev - 1);
-          }
-        }
-      } else {
+    if (pressed === "hour") {
+      if (starthour - 1 >= 0) {
+        setstarthour((prev) => prev - 1);
+      }
+    } else if (pressed === "minute") {
+      if (startminute - 1 >= 0) {
+        setstartminute((prev) => prev - 1);
+      }
+    } else if (pressed === "second") {
+      if (startsecond - 1 >= 0) {
         setstartsecond((prev) => prev - 1);
       }
-    } else {
-      setstartmilli((prev) => prev - 1);
+    } else if (pressed === "milli") {
+      if (startmilli - 1 >= 0) {
+        setstartmilli((prev) => prev - 1);
+      }
     }
   }
 
@@ -261,25 +316,29 @@ const Admin = () => {
                     <div
                       className="names"
                       style={{ color: "white" }}
-                      id={"name" + finish.no}>
+                      id={"name" + finish.no}
+                    >
                       {finish.no}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + finish.start}>
+                      id={"stimes" + finish.start}
+                    >
                       {finish.start}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + finish.time}>
+                      id={"stimes" + finish.time}
+                    >
                       {finish.time}
                     </div>
                     <div
                       className="stimes"
                       style={{ color: "white" }}
-                      id={"stimes" + finish.stop}>
+                      id={"stimes" + finish.stop}
+                    >
                       {finish.stop}
                     </div>
                   </div>
@@ -303,21 +362,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -326,21 +388,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -349,21 +414,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -372,7 +440,8 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -382,7 +451,8 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -397,7 +467,7 @@ const Admin = () => {
         <div className="lines">
           <Select
             placeholder="Select Special Stage"
-            options={options}
+            options={specialStages}
             styles={styles}
             onChange={handlechange}
             className="select"
@@ -413,7 +483,50 @@ const Admin = () => {
           />
         </div>
         <div className="lines">
-          <h1 className="starthour">{start}</h1>
+          <h1
+            className="starthour"
+            id="hour"
+            onClick={() => {
+              setpressed("hour");
+              console.log(pressed);
+              select("hour");
+            }}
+          >
+            {starthour}
+          </h1>
+          <h1 className="starthour">:</h1>
+          <h1
+            className="starthour"
+            id="minute"
+            onClick={() => {
+              setpressed("minute");
+              select("minute");
+            }}
+          >
+            {startminute}
+          </h1>
+          <h1 className="starthour">:</h1>
+          <h1
+            className="starthour"
+            id="second"
+            onClick={() => {
+              setpressed("second");
+              select("second");
+            }}
+          >
+            {startsecond}
+          </h1>
+          <h1 className="starthour">:</h1>
+          <h1
+            className="starthour"
+            id="milli"
+            onClick={() => {
+              setpressed("milli");
+              select("milli");
+            }}
+          >
+            {startmilli}
+          </h1>
         </div>
 
         <div className="lines">
