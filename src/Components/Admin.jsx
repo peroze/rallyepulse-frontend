@@ -17,9 +17,23 @@ import {
   Chip,
 } from "@nextui-org/react";
 import { MyButtons } from "./MyButtons.tsx";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Checkbox,
+  Input,
+  Link,
+} from "@nextui-org/react";
 
 const Admin = () => {
   const [input, setinput] = useState("#");
+  const [index, setindex] = useState();
+  const [cetime, setcetime] = useState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [time, settime] = useState(
     new Date().getHours() +
       ":" +
@@ -265,9 +279,9 @@ const Admin = () => {
       console.log(mode);
       if (mode.value === "start") {
         if (starts.map((start) => start.no).indexOf(input.substring(1)) != -1) {
-          starts[
-            starts.map((start) => start.no).indexOf(input.substring(1))
-          ].starttime = currentTime;
+          setindex(starts.indexOf(input.substring(1)));
+          setcetime(currentTime);
+          onOpen();
         } else {
           console.log("here");
           starts.unshift({
@@ -305,6 +319,20 @@ const Admin = () => {
     } catch (error) {
       console.error("Error", error);
     }
+  }
+
+  function replace() {
+    if (mode === "start") {
+      starts[index].starttime = cetime;
+    } else if (mode === "stop") {
+      starts[index].finishtime = "--";
+      starts[index].stoptime = cetime;
+    } else if (mode === "finish") {
+      starts[index].finishtime = cetime;
+      starts[index].stoptime = cetime;
+    }
+
+    onClose();
   }
 
   setInterval(() => {
@@ -379,21 +407,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -402,21 +433,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -425,21 +459,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -448,7 +485,8 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -458,7 +496,8 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -496,7 +535,8 @@ const Admin = () => {
               setpressed("hour");
               console.log(pressed);
               select("hour");
-            }}>
+            }}
+          >
             {String(starthour).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -506,7 +546,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("minute");
               select("minute");
-            }}>
+            }}
+          >
             {String(startminute).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -516,7 +557,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("second");
               select("second");
-            }}>
+            }}
+          >
             {String(startsecond).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -526,7 +568,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("milli");
               select("milli");
-            }}>
+            }}
+          >
             {String(startmilli).padStart(3, "0")}
           </h1>
         </div>
@@ -540,6 +583,31 @@ const Admin = () => {
           </div>
         </div>
       </div>
+      <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Modal Title
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  There is already a time for this car number. Do you want to
+                  replace it?
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  No
+                </Button>
+                <Button color="primary" onPress={replace}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

@@ -6,6 +6,16 @@ import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+import {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Chip,
+} from "@nextui-org/react";
 
 const Finish = () => {
   const [input, setinput] = useState("#");
@@ -199,69 +209,47 @@ const Finish = () => {
     <div className="finish-container">
       <div className="times">
         <div className="row">
-          <div className="blines">
-            <div className="names">No</div>
-            <div className="stimes">Start Time</div>
-            <div className="stimes">Finish Time</div>
-            <div className="stimes">Stop Time</div>
-          </div>
-          <div className="timeboard">
-            {finishes.map((finish) => {
-              if (true) {
-                return (
-                  <div className="blines" key={finish.no}>
-                    <div
-                      className="names"
-                      style={{ color: "white" }}
-                      id={"name" + finish.no}
-                    >
-                      {finish.no}
+          <Table isStriped aria-label="Stop Table">
+            <TableHeader>
+              <TableColumn>No</TableColumn>
+              <TableColumn>Start</TableColumn>
+              <TableColumn>Finish</TableColumn>
+              <TableColumn>Stop</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={"No cars to display."}>
+              {finishes.map((finish) => {
+                if (true) {
+                  return (
+                    <TableRow key={finish.key}>
+                      <TableCell>{finish.no}</TableCell>
+                      <TableCell>{finish.starttime}</TableCell>
+                      <TableCell>{finish.finishtime}</TableCell>
+                      <TableCell>{finish.stoptime}</TableCell>
+                    </TableRow>
+                  );
+                } else {
+                  return (
+                    <div className="blines" key={finish.no}>
+                      <div
+                        className="names"
+                        style={{ color: "red" }}
+                        id={"name" + finish.no}
+                      >
+                        {finish.no}
+                      </div>
+                      <div
+                        className="stimes"
+                        style={{ color: "red" }}
+                        id={"stimes" + finish.time}
+                      >
+                        {finish.time}
+                      </div>
                     </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + finish.start}
-                    >
-                      {finish.start}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + finish.time}
-                    >
-                      {finish.time}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + finish.stop}
-                    >
-                      {finish.stop}
-                    </div>
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="blines" key={finish.no}>
-                    <div
-                      className="names"
-                      style={{ color: "red" }}
-                      id={"name" + finish.no}
-                    >
-                      {finish.no}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "red" }}
-                      id={"stimes" + finish.time}
-                    >
-                      {finish.time}
-                    </div>
-                  </div>
-                );
-              }
-            })}
-          </div>
+                  );
+                }
+              })}
+            </TableBody>
+          </Table>
         </div>
       </div>
       <div className="info">

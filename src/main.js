@@ -14,7 +14,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     show: false,
-    fullscreen: false,
+    // fullscreen: false,
     // titleBarStyle : 'hidden',
     // titleBarOverlay : true,
     webPreferences: {
@@ -43,7 +43,18 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.maximize();
   mainWindow.resizable = false;
+  mainWindow.webContents.openDevTools();
   mainWindow.show();
+  // var splash = new BrowserWindow({
+  //   width: 500,
+  //   height: 300,
+  //   transparent: true,
+  //   frame: false,
+  //   alwaysOnTop: true,
+  // });
+
+  // splash.loadFile("./splashscreen.html");
+  // splash.center();
 
   mainWindow.webContents.on(
     "select-bluetooth-device",
@@ -63,11 +74,15 @@ const createWindow = () => {
     }
   );
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  // setTimeout(function () {
+  //   splash.close();
+  //   // and load the index.html of the app.
+  //   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //   // Open the DevTools.
+  //   mainWindow.webContents.openDevTools();
+  //   mainWindow.show();
+  // }, 20000);
 };
 
 ipcMain.on("cancel-bluetooth-request", (event) => {

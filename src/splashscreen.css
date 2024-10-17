@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.text {
+  width: 50%;
+  height: 100vh;
+  background-color: rgb(55, 59, 57);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.image {
+  width: 50%;
+}
+.logo {
+  width: 50%;
+  height: 50%;
+  background-color: rgb(170, 137, 27);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+.logo img {
+  width: 90%;
+  object-fit: contain;
+}
+
+body {
+  background-color: rgb(170, 137, 27);
+  margin: 0;
+  padding: 0;
+}

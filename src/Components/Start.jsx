@@ -6,6 +6,16 @@ import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+import {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Chip,
+} from "@nextui-org/react";
 
 const Start = () => {
   const [input, setinput] = useState("#");
@@ -304,96 +314,97 @@ const Start = () => {
     <div className="start-container">
       <div className="times">
         <div className="row">
-          <div className="blines">
-            <div className="names">No</div>
-            <div className="stimes">Start Time</div>
-            <div className="cross">Delete</div>
-          </div>
-          <div className="timeboard">
-            {starts.map((start) => {
-              if (
-                start.timevariable.getHours() < new Date().getHours() ||
-                (start.timevariable.getHours() == new Date().getHours() &&
-                  start.timevariable.getMinutes() <= new Date().getMinutes())
-              ) {
-                return (
-                  <div className="blines" key={start.no}>
-                    <div
-                      className="names"
-                      style={{ color: "white" }}
-                      id={"name" + start.no}
-                    >
-                      {start.no}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + start.time}
-                    >
-                      {start.time}
-                    </div>
-                    <div className="cross"></div>
-                  </div>
-                );
-              } else {
-                if (unreceived.includes(start.no)) {
+          <Table isStriped aria-label="Start Table">
+            <TableHeader>
+              <TableColumn>No</TableColumn>
+              <TableColumn>Start</TableColumn>
+              <TableColumn>Status</TableColumn>
+              <TableColumn>Delete</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={"No cars to display."}>
+              {starts.map((start) => {
+                if (
+                  start.timevariable.getHours() < new Date().getHours() ||
+                  (start.timevariable.getHours() == new Date().getHours() &&
+                    start.timevariable.getMinutes() <= new Date().getMinutes())
+                ) {
                   return (
-                    <div className="blines" key={start.no}>
-                      <div
-                        className="names"
-                        style={{ color: "purple" }}
-                        id={"name" + start.no}
-                      >
-                        {start.no}
-                      </div>
-                      <div
-                        className="stimes"
-                        style={{ color: "purple" }}
-                        id={"stimes" + start.time}
-                      >
-                        {start.time}
-                      </div>
-                      <div className="cross">
-                        <FontAwesomeIcon
-                          icon={faXmark}
-                          style={{
-                            color: "red",
-                          }}
-                        />
-                      </div>
-                    </div>
+                    <TableRow key={start.key}>
+                      <TableCell>{start.no}</TableCell>
+                      <TableCell>{start.time}</TableCell>
+                      <TableCell>
+                        <Chip
+                          className="capitalize"
+                          color={"success"}
+                          size="sm"
+                          variant="flat"
+                        >
+                          Started
+                        </Chip>
+                      </TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
                   );
                 } else {
-                  return (
-                    <div className="blines" key={start.no}>
-                      <div
-                        className="names"
-                        style={{ color: "yellowgreen" }}
-                        id={"name" + start.no}
-                      >
-                        {start.no}
-                      </div>
-                      <div
-                        className="stimes"
-                        style={{ color: "yellowgreen" }}
-                        id={"stimes" + start.time}
-                      >
-                        {start.time}
-                      </div>
-                      <div className="cross">
-                        <FontAwesomeIcon
-                          icon={faXmark}
-                          style={{
-                            color: "red",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  );
+                  if (unreceived.includes(start.no)) {
+                    return (
+                      <TableRow key={start.key}>
+                        <TableCell>{start.no}</TableCell>
+                        <TableCell>{start.time}</TableCell>
+                        <TableCell>
+                          <Chip
+                            className="capitalize"
+                            color={"secondary"}
+                            size="sm"
+                            variant="flat"
+                          >
+                            Unreceived
+                          </Chip>
+                        </TableCell>
+                        <TableCell>
+                          <div className="cross">
+                            <FontAwesomeIcon
+                              icon={faXmark}
+                              style={{
+                                color: "red",
+                              }}
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  } else {
+                    return (
+                      <TableRow key={start.key}>
+                        <TableCell>{start.no}</TableCell>
+                        <TableCell>{start.time}</TableCell>
+                        <TableCell>
+                          <Chip
+                            className="capitalize"
+                            color={"warning"}
+                            size="sm"
+                            variant="flat"
+                          >
+                            Waiting To Start
+                          </Chip>
+                        </TableCell>
+                        <TableCell>
+                          <div className="cross">
+                            <FontAwesomeIcon
+                              icon={faXmark}
+                              style={{
+                                color: "red",
+                              }}
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
                 }
-              }
-            })}
-          </div>
+              })}
+            </TableBody>
+          </Table>
         </div>
       </div>
       <div className="controls">
