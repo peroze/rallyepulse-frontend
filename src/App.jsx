@@ -8,22 +8,25 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import Finish from "./Components/Finish.jsx";
 import Stop from "./Components/Stop.jsx";
 import Admin from "./Components/Admin.jsx";
+import { NextUIProvider } from "@nextui-org/system";
 
 function App() {
   return (
-    <div>
-      <Router basename="/">
-        <header>
-          <Menubar />
-        </header>
-        <Routes>
-          <Route exact path="/" element={<Start />} />
-          <Route exact path="/finish" element={<Finish />} />
-          <Route exact path="/stop" element={<Stop />} />
-          <Route exact path="/admin" element={<Admin />} />
-        </Routes>
-      </Router>
-    </div>
+    <NextUIProvider>
+      <main className="dark text-foreground bg-background">
+        <Router basename="/">
+          <header>
+            <Menubar />
+          </header>
+          <Routes>
+            <Route exact path="/" element={<Start />} />
+            <Route exact path="/finish" element={<Finish />} />
+            <Route exact path="/stop" element={<Stop />} />
+            <Route exact path="/admin" element={<Admin />} />
+          </Routes>
+        </Router>
+      </main>
+    </NextUIProvider>
   );
 }
 

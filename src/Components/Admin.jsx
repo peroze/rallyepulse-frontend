@@ -6,6 +6,17 @@ import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+import {
+  Table,
+  TableColumn,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Chip,
+} from "@nextui-org/react";
+import { MyButtons } from "./MyButtons.tsx";
 
 const Admin = () => {
   const [input, setinput] = useState("#");
@@ -185,18 +196,26 @@ const Admin = () => {
     if (pressed === "hour") {
       if (starthour + 1 < 24) {
         setstarthour((prev) => prev + 1);
+      } else {
+        setstarthour(0);
       }
     } else if (pressed === "minute") {
       if (startminute + 1 < 60) {
         setstartminute((prev) => prev + 1);
+      } else {
+        setstartminute(0);
       }
     } else if (pressed === "second") {
       if (startsecond + 1 < 60) {
         setstartsecond((prev) => prev + 1);
+      } else {
+        setstartsecond(0);
       }
     } else if (pressed === "milli") {
       if (startmilli + 1 < 1000) {
         setstartmilli((prev) => prev + 1);
+      } else {
+        setstartmilli(0);
       }
     }
   }
@@ -205,18 +224,26 @@ const Admin = () => {
     if (pressed === "hour") {
       if (starthour - 1 >= 0) {
         setstarthour((prev) => prev - 1);
+      } else {
+        setstarthour(23);
       }
     } else if (pressed === "minute") {
       if (startminute - 1 >= 0) {
         setstartminute((prev) => prev - 1);
+      } else {
+        setstartminute(59);
       }
     } else if (pressed === "second") {
       if (startsecond - 1 >= 0) {
         setstartsecond((prev) => prev - 1);
+      } else {
+        setstartsecond(59);
       }
     } else if (pressed === "milli") {
       if (startmilli - 1 >= 0) {
         setstartmilli((prev) => prev - 1);
+      } else {
+        setstartmilli(999);
       }
     }
   }
@@ -235,25 +262,41 @@ const Admin = () => {
       t.setSeconds(startsecond);
       t.setMilliseconds(startmilli);
       const currentTime = t.toLocaleTimeString("en-US", option);
-      if (mode === "start") {
-        if (starts.indexOf(input.substring(1)) != -1) {
-          starts[starts.indexOf(input.substring(1))].starttime = currentTime;
+      console.log(mode);
+      if (mode.value === "start") {
+        if (starts.map((start) => start.no).indexOf(input.substring(1)) != -1) {
+          starts[
+            starts.map((start) => start.no).indexOf(input.substring(1))
+          ].starttime = currentTime;
         } else {
+          console.log("here");
           starts.unshift({
+            key: starts.length + 1,
             no: input.substring(1),
             starttime: currentTime,
             finishtime: "-",
             stoptime: "-",
           });
         }
-      } else if (mode === "stop") {
+      } else if (mode.value === "stop") {
         if (starts.indexOf(input.substring(1)) != -1) {
-          starts[starts.indexOf(input.substring(1))].finishtime = "--";
-          starts[starts.indexOf(input.substring(1))].stoptime = currentTime;
+          starts[
+            starts.map((start) => start.no).indexOf(input.substring(1))
+          ].finishtime = "--";
+          starts[
+            starts.map((start) => start.no).indexOf(input.substring(1))
+          ].stoptime = currentTime;
         }
-      } else if (mode === "finish") {
-        starts[starts.indexOf(input.substring(1))].finishtime = currentTime;
-        starts[starts.indexOf(input.substring(1))].stoptime = currentTime; // Tha pairnei thn afairesh apo thn vash
+      } else if (mode.value === "finish") {
+        console.log(
+          starts[starts.map((start) => start.no).indexOf(input.substring(1))]
+        );
+        starts[
+          starts.map((start) => start.no).indexOf(input.substring(1))
+        ].finishtime = currentTime;
+        starts[
+          starts.map((start) => start.no).indexOf(input.substring(1))
+        ].stoptime = currentTime; // Tha pairnei thn afairesh apo thn vash
       } else {
         return;
       }
@@ -302,50 +345,24 @@ const Admin = () => {
     <div className="admin-container">
       <div className="times">
         <div className="row">
-          <div className="blines">
-            <div className="names">No</div>
-            <div className="stimes">Start Time</div>
-            <div className="stimes">Finish Time</div>
-            <div className="stimes">Stop Time</div>
-          </div>
-          <div className="timeboard">
-            {starts.map((finish) => {
-              if (true) {
-                return (
-                  <div className="blines" key={finish.no}>
-                    <div
-                      className="names"
-                      style={{ color: "white" }}
-                      id={"name" + finish.no}
-                    >
-                      {finish.no}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + finish.start}
-                    >
-                      {finish.start}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + finish.time}
-                    >
-                      {finish.time}
-                    </div>
-                    <div
-                      className="stimes"
-                      style={{ color: "white" }}
-                      id={"stimes" + finish.stop}
-                    >
-                      {finish.stop}
-                    </div>
-                  </div>
-                );
-              }
-            })}
-          </div>
+          <Table isStriped aria-label="Admin Table">
+            <TableHeader>
+              <TableColumn>No</TableColumn>
+              <TableColumn>Start</TableColumn>
+              <TableColumn>Finish</TableColumn>
+              <TableColumn>Stop</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={"No cars to display."}>
+              {starts.map((start) => (
+                <TableRow key={start.key}>
+                  <TableCell>{start.no}</TableCell>
+                  <TableCell>{start.starttime}</TableCell>
+                  <TableCell>{start.finishtime}</TableCell>
+                  <TableCell>{start.stoptime}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
       <div className="controls">
@@ -362,24 +379,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -388,24 +402,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -414,24 +425,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -440,8 +448,7 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -451,8 +458,7 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -490,9 +496,8 @@ const Admin = () => {
               setpressed("hour");
               console.log(pressed);
               select("hour");
-            }}
-          >
-            {starthour}
+            }}>
+            {String(starthour).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
           <h1
@@ -501,9 +506,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("minute");
               select("minute");
-            }}
-          >
-            {startminute}
+            }}>
+            {String(startminute).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
           <h1
@@ -512,9 +516,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("second");
               select("second");
-            }}
-          >
-            {startsecond}
+            }}>
+            {String(startsecond).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
           <h1
@@ -523,9 +526,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("milli");
               select("milli");
-            }}
-          >
-            {startmilli}
+            }}>
+            {String(startmilli).padStart(3, "0")}
           </h1>
         </div>
 

@@ -7,6 +7,10 @@ body,
   overflow-y: hidden;
 }
 
+.tableAd {
+  height: 100vh !important;
+}
+
 .admin-container {
   display: flex;
   width: 100%;
@@ -21,7 +25,7 @@ body,
   align-items: space-between;
   justify-content: center;
   flex-wrap: wrap !important;
-  width: 30% !important;
+  width: 30%;
   height: 85vh !important;
 }
 
@@ -169,8 +173,10 @@ body,
 }
 
 .admin-container .row {
+  margin-top: 5px;
   height: 90vh;
   display: flex;
+  width: 120%;
   flex-wrap: nowrap;
   align-items: flex-start;
   flex-direction: column;
