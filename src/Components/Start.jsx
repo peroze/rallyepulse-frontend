@@ -213,66 +213,46 @@ const Start = () => {
           console.error("Error Uploading Start Time:", error);
           throw error; // Rethrow the error to handle it in the caller
         });
+      const devicepromise = navigator.bluetooth.requestDevice({
+        filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+      });
+      const timeoutpromise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log("Device not found.");
+          reject(new Error("Device not found."));
+        }, t.getTime() - new Date().getTime() - 10000);
+      });
+      const device = await Promise.race([devicepromise, timeoutpromise]);
 
-      // ipcRenderer
-      //   .invoke("request", {
-      //     methof: "GET",
-      //     url: "http://localhost:8080/api/specialstage/getspecialstages",
-      //   })
-      //   .then((data) => console.log(data))
-      //   .catch((resp) => console.warn(resp));
-      // await timekeepingService.start(
-      //   input.substring(1),
-      //   selectedOption,
-      //   t.getHours(),
-      //   t.getMinutes(),
-      //   t.getSeconds(),
-      //   0,
-      //   2
-      // );
+      const server = await device.gatt.connect();
+      const service = await server.getPrimaryService(
+        "00001805-0000-1000-8000-00805f9b34fb"
+      );
+      const characteristics = await service.getCharacteristic(
+        "00002a2b-0000-1000-8000-00805f9b34fb"
+      );
+      const characteristics2 = await service.getCharacteristic(
+        "00002a37-0000-1000-8000-00805f9b34fb"
+      );
+      const value = await characteristics2.readValue();
+
+      if (value.getUint8(0) != input.substring(1)) {
+        return;
+      }
+
+      console.log("Number matched");
+
+      const encoder = new TextEncoder();
+      const timedata = encoder.encode(currentTime);
+      await characteristics.writeValue(timedata);
+      console.log("Time has been sent.", currentTime);
+
+      var array = [...unreceived];
+      array.splice(unreceived.indexOf(input.substring(1)), 1);
+      setunreceived(array);
+      await server.disconnect();
+      console.log("Disconnected from server.");
       return;
-
-      // const devicepromise = navigator.bluetooth.requestDevice({
-      //   filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
-      // });
-
-      // const timeoutpromise = new Promise((resolve, reject) => {
-      //   setTimeout(() => {
-      //     console.log("Device not found.");
-      //     reject(new Error("Device not found."));
-      //   }, t.getTime() - new Date().getTime() - 10000);
-      // });
-      // const device = await Promise.race([devicepromise, timeoutpromise]);
-
-      // const server = await device.gatt.connect();
-      // const service = await server.getPrimaryService(
-      //   "00001805-0000-1000-8000-00805f9b34fb"
-      // );
-      // const characteristics = await service.getCharacteristic(
-      //   "00002a2b-0000-1000-8000-00805f9b34fb"
-      // );
-      // const characteristics2 = await service.getCharacteristic(
-      //   "00002a37-0000-1000-8000-00805f9b34fb"
-      // );
-      // const value = await characteristics2.readValue();
-
-      // if (value.getUint8(0) != input.substring(1)) {
-      //   return;
-      // }
-
-      // console.log("Number matched");
-
-      // const encoder = new TextEncoder();
-      // const timedata = encoder.encode(currentTime);
-      // await characteristics.writeValue(timedata);
-      // console.log("Time has been sent.", currentTime);
-
-      // var array = [...unreceived];
-      // array.splice(unreceived.indexOf(input.substring(1)), 1);
-      // setunreceived(array);
-      // await server.disconnect();
-      // console.log("Disconnected from server.");
-      // return;
     } catch (error) {
       console.error("Error", error);
     }
@@ -337,12 +317,20 @@ const Start = () => {
                           className="capitalize"
                           color={"success"}
                           size="sm"
-                          variant="flat"
-                        >
+                          variant="flat">
                           Started
                         </Chip>
                       </TableCell>
-                      <TableCell></TableCell>
+                      <TableCell>
+                        <div className="cross">
+                          <FontAwesomeIcon
+                            icon={faXmark}
+                            style={{
+                              color: "grey",
+                            }}
+                          />
+                        </div>
+                      </TableCell>
                     </TableRow>
                   );
                 } else {
@@ -356,8 +344,7 @@ const Start = () => {
                             className="capitalize"
                             color={"secondary"}
                             size="sm"
-                            variant="flat"
-                          >
+                            variant="flat">
                             Unreceived
                           </Chip>
                         </TableCell>
@@ -383,8 +370,7 @@ const Start = () => {
                             className="capitalize"
                             color={"warning"}
                             size="sm"
-                            variant="flat"
-                          >
+                            variant="flat">
                             Waiting To Start
                           </Chip>
                         </TableCell>
@@ -421,24 +407,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -447,24 +430,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -473,24 +453,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -499,8 +476,7 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -510,8 +486,7 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>

@@ -5,8 +5,8 @@ export const MyButtons = extendVariants(Button, {
     // <- modify/add variants
     color: {
       olive: "text-[#000] bg-[#84cc16]",
-      purple: "bg-[#ff8c00] text-[#purple]",
-      red: "bg-[#8b5cf6] text-[#yellowgreen]",
+      blue: "bg-[blue] text-[white]",
+      red: "bg-[red] text-[white]",
     },
     isDisabled: {
       true: "bg-[#eaeaea] text-[#000] opacity-50 cursor-not-allowed",

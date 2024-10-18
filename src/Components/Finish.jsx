@@ -6,6 +6,7 @@ import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+import { MyButtons } from "./MyButtons.tsx";
 import {
   Table,
   TableColumn,
@@ -112,48 +113,61 @@ const Finish = () => {
     }
   }, [specialStages]);
 
-  async function StartBluetooth() {
-    // const device = navigator.bluetooth
-    //   .requestDevice({
-    //     filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
-    //   })
-    //   .then(async (device) => {
-    //     const server = await device.gatt.connect();
-    //     const service = await server.getPrimaryService(
-    //       "00001805-0000-1000-8000-00805f9b34fb"
-    //     );
-    //     const characteristics2 = await service.getCharacteristic(
-    //       "00002a37-0000-1000-8000-00805f9b34fb"
-    //     );
-    //     const value = await characteristics2.readValue();
-    //     setfinishnumber(value.getUint8(0));
-    //     console.log("Number matched");
-    //     await server.disconnect();
-    //     console.log("Disconnected from server.");
-    //     return;
-    //   });
+  function StartBluetooth() {
+    console.log("Start Bluetooth");
+    const device = navigator.bluetooth
+      .requestDevice({
+        filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+      })
+      .then((device) => {
+        const server = device.gatt.connect().then(async (server) => {
+          const service = server
+            .getPrimaryService("00001805-0000-1000-8000-00805f9b34fb")
+            .then((service) => {
+              const characteristics2 = service
+                .getCharacteristic("00002a37-0000-1000-8000-00805f9b34fb")
+                .then((characteristic) => {
+                  const value = characteristic
+                    .readValue()
+                    .then(async (value) => {
+                      setfinishnumber(value.getUint8(0));
+                      console.log(value.getUint8(0));
+                      await server.disconnect();
+                    });
+                });
+            });
+        });
 
+        console.log("Disconnected from server.");
+        return;
+      });
     return;
   }
 
-  function setNumber() {
-    setfinishnumber(input.substring(1));
-    FinishCar("17:25:35");
+  function BeamsSimulator() {
+    let t = new Date();
+    FinishCar(t, finishnumber);
   }
 
-  function FinishCar(car_time) {
-    if (finishnumber === -1) {
+  function setNumber() {
+    //console.log("Number: ", finishnumber);
+    setfinishnumber(input.substring(1));
+  }
+
+  function FinishCar(car_time, finishnumbers) {
+    if (finishnumbers === -1) {
       return;
     } else {
+      console.log(car_time * 1000000);
       window.request
         .request({
           data: {
-            co_number: parseInt(input.substring(1)),
+            co_number: finishnumbers,
             stage: selectedOption.value,
             hour: car_time.getHours(),
             minute: car_time.getMinutes(),
             second: car_time.getSeconds(),
-            nano: car_time * 1000000,
+            nano: car_time.getMilliseconds() * 1000000,
             decimal: 3,
           },
           method: "PUT",
@@ -162,13 +176,21 @@ const Finish = () => {
         .then((response) => {
           console.log("Time started: ", response.data);
           finishes.unshift({
+            key: finishes.length + 1,
             no: finishnumber,
-            time: car_time,
+            time:
+              car_time.getHours() +
+              ":" +
+              car_time.getMinutes() +
+              ":" +
+              car_time.getSeconds() +
+              ":" +
+              car_time.getMilliseconds(),
             start: response.data.start_time,
-            stop: response.data.stop_time,
+            stop: response.data.total_time,
           });
           setfinishnumber(-1);
-          StartBluetooth();
+          //StartBluetooth();
         })
         .catch((error) => {
           console.error("Error Uploading Start Time:", error);
@@ -214,7 +236,7 @@ const Finish = () => {
               <TableColumn>No</TableColumn>
               <TableColumn>Start</TableColumn>
               <TableColumn>Finish</TableColumn>
-              <TableColumn>Stop</TableColumn>
+              <TableColumn>Total</TableColumn>
             </TableHeader>
             <TableBody emptyContent={"No cars to display."}>
               {finishes.map((finish) => {
@@ -222,9 +244,9 @@ const Finish = () => {
                   return (
                     <TableRow key={finish.key}>
                       <TableCell>{finish.no}</TableCell>
-                      <TableCell>{finish.starttime}</TableCell>
-                      <TableCell>{finish.finishtime}</TableCell>
-                      <TableCell>{finish.stoptime}</TableCell>
+                      <TableCell>{finish.start}</TableCell>
+                      <TableCell>{finish.time}</TableCell>
+                      <TableCell>{finish.stop}</TableCell>
                     </TableRow>
                   );
                 } else {
@@ -233,15 +255,13 @@ const Finish = () => {
                       <div
                         className="names"
                         style={{ color: "red" }}
-                        id={"name" + finish.no}
-                      >
+                        id={"name" + finish.no}>
                         {finish.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "red" }}
-                        id={"stimes" + finish.time}
-                      >
+                        id={"stimes" + finish.time}>
                         {finish.time}
                       </div>
                     </div>
@@ -277,24 +297,21 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -303,24 +320,21 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -329,24 +343,21 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -355,8 +366,7 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -366,8 +376,7 @@ const Finish = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -375,6 +384,14 @@ const Finish = () => {
           <div className="startbuttom" onClick={setNumber}>
             Set Competitor Number
           </div>
+        </div>
+        <div className="lines">
+          <MyButtons color="blue" onClick={StartBluetooth}>
+            Start Bluetooth
+          </MyButtons>
+          <MyButtons color="red" onClick={BeamsSimulator}>
+            Beams Simulator
+          </MyButtons>
         </div>
       </div>
     </div>

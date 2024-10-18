@@ -11,9 +11,10 @@ body,
   display: flex;
   width: 100vw;
   height: 85vh;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   flex-wrap: nowrap;
+  gap: 1px;
 }
 
 .stop-container .times {
@@ -34,9 +35,8 @@ body,
   align-items: center;
   justify-content: center;
   flex-wrap: wrap !important;
-  width: 20% !important;
+  width: 30% !important;
   height: 85vh !important;
-  flex-wrap: wrap;
 }
 
 .stop-container .controls {

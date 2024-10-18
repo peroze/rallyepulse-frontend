@@ -1,5 +1,6 @@
 const { app, BrowserWindow, protocol, ipcMain } = require("electron");
-import axios from "axios";
+const axios = require("axios");
+const path = require("path");
 //const path = require("node:path");
 //const fs = require("fs");
 
@@ -24,74 +25,56 @@ const createWindow = () => {
       sandbox: false,
     },
   });
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
-    (details, callback) => {
-      callback({ requestHeaders: { Origin: "*", ...details.requestHeaders } });
-    }
-  );
 
-  mainWindow.webContents.session.webRequest.onHeadersReceived(
-    (details, callback) => {
-      callback({
-        responseHeaders: {
-          "Access-Control-Allow-Origin": ["*"],
-          ...details.responseHeaders,
-        },
-      });
-    }
-  );
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  mainWindow.maximize();
-  mainWindow.resizable = false;
-  mainWindow.webContents.openDevTools();
-  mainWindow.show();
-  // var splash = new BrowserWindow({
-  //   width: 500,
-  //   height: 300,
-  //   transparent: true,
-  //   frame: false,
-  //   alwaysOnTop: true,
-  // });
+  //mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // splash.loadFile("./splashscreen.html");
-  // splash.center();
+  var splash = new BrowserWindow({
+    width: 500,
+    height: 300,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
 
-  mainWindow.webContents.on(
-    "select-bluetooth-device",
-    (event, deviceList, callback) => {
-      //console.log('Searching', device.deviceName);
-      event.preventDefault();
-      selectBluetoothCallback = callback;
-      const result = deviceList.find((device) => {
-        //console.log('Selecting device:', device.deviceName);
-        return true;
-      });
-      if (result) {
-        callback(result.deviceId);
-      } else {
-        console.log("No Device found");
+  splash.loadFile("splashscreen.html");
+  splash.center();
+
+  setTimeout(function () {
+    splash.close();
+    mainWindow.maximize();
+    mainWindow.resizable = false;
+    mainWindow.webContents.on(
+      "select-bluetooth-device",
+      (event, deviceList, callback) => {
+        //console.log('Searching', device.deviceName);
+        event.preventDefault();
+        selectBluetoothCallback = callback;
+        const result = deviceList.find((device) => {
+          //console.log('Selecting device:', device.deviceName);
+          return true;
+        });
+        if (result) {
+          callback(result.deviceId);
+        } else {
+          console.log("No Device found");
+        }
       }
-    }
-  );
+    );
 
-  // setTimeout(function () {
-  //   splash.close();
-  //   // and load the index.html of the app.
-  //   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+    ipcMain.on("cancel-bluetooth-request", (event) => {
+      selectBluetoothCallback("");
+    });
 
-  //   // Open the DevTools.
-  //   mainWindow.webContents.openDevTools();
-  //   mainWindow.show();
-  // }, 20000);
+    ipcMain.on("bluetooth-pairing-response", (event, response) => {
+      bluetoothPinCallback(response);
+    });
+
+    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+    mainWindow.show();
+  }, 7000);
 };
-
-ipcMain.on("cancel-bluetooth-request", (event) => {
-  selectBluetoothCallback("");
-});
-
-ipcMain.on("bluetooth-pairing-response", (event, response) => {
-  bluetoothPinCallback(response);
-});
 
 ipcMain.handle("request", async (event, axios_request) => {
   console.log(axios_request);

@@ -16,7 +16,9 @@ import {
   Button,
   Chip,
 } from "@nextui-org/react";
+
 import { MyButtons } from "./MyButtons.tsx";
+
 import {
   Modal,
   ModalContent,
@@ -296,21 +298,29 @@ const Admin = () => {
         if (starts.indexOf(input.substring(1)) != -1) {
           starts[
             starts.map((start) => start.no).indexOf(input.substring(1))
-          ].finishtime = "--";
+          ].finishtime = "-";
           starts[
             starts.map((start) => start.no).indexOf(input.substring(1))
           ].stoptime = currentTime;
         }
       } else if (mode.value === "finish") {
-        console.log(
-          starts[starts.map((start) => start.no).indexOf(input.substring(1))]
-        );
-        starts[
-          starts.map((start) => start.no).indexOf(input.substring(1))
-        ].finishtime = currentTime;
-        starts[
-          starts.map((start) => start.no).indexOf(input.substring(1))
-        ].stoptime = currentTime; // Tha pairnei thn afairesh apo thn vash
+        if (starts.map((start) => start.no).indexOf(input.substring(1)) != -1) {
+          if (
+            starts[starts.map((start) => start.no).indexOf(input.substring(1))]
+              .finishtime === "-"
+          ) {
+            starts[
+              starts.map((start) => start.no).indexOf(input.substring(1))
+            ].finishtime = currentTime;
+            starts[
+              starts.map((start) => start.no).indexOf(input.substring(1))
+            ].stoptime = currentTime;
+          } else {
+            setindex(starts.indexOf(input.substring(1)));
+            setcetime(currentTime);
+            onOpen();
+          }
+        } // Tha pairnei thn afairesh apo thn vash
       } else {
         return;
       }
@@ -407,24 +417,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -433,24 +440,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -459,24 +463,21 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -485,8 +486,7 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -496,8 +496,7 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -535,8 +534,7 @@ const Admin = () => {
               setpressed("hour");
               console.log(pressed);
               select("hour");
-            }}
-          >
+            }}>
             {String(starthour).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -546,8 +544,7 @@ const Admin = () => {
             onClick={() => {
               setpressed("minute");
               select("minute");
-            }}
-          >
+            }}>
             {String(startminute).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -557,8 +554,7 @@ const Admin = () => {
             onClick={() => {
               setpressed("second");
               select("second");
-            }}
-          >
+            }}>
             {String(startsecond).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -568,8 +564,7 @@ const Admin = () => {
             onClick={() => {
               setpressed("milli");
               select("milli");
-            }}
-          >
+            }}>
             {String(startmilli).padStart(3, "0")}
           </h1>
         </div>
@@ -583,12 +578,12 @@ const Admin = () => {
           </div>
         </div>
       </div>
-      <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal size={"xl"} isOpen={isOpen} onClose={onClose} backdrop={"blur"}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                Time Already Exists!
               </ModalHeader>
               <ModalBody>
                 <p>
