@@ -17,10 +17,22 @@ import {
   Button,
   Chip,
 } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Checkbox,
+  Input,
+  Link,
+} from "@nextui-org/react";
 
 const Finish = () => {
   const [input, setinput] = useState("#");
   const [finishnumber, setfinishnumber] = useState(-1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [time, settime] = useState(
     new Date().getHours() +
       ":" +
@@ -28,6 +40,7 @@ const Finish = () => {
       ":" +
       new Date().getSeconds()
   );
+  const [selectedkey, setselectedkey] = useState(-1);
   const [finishes, setfinishes] = useState([]);
   const [unreceived, setunreceived] = useState([]);
   const handlechange = (selectedOption) => {
@@ -115,47 +128,63 @@ const Finish = () => {
 
   function StartBluetooth() {
     console.log("Start Bluetooth");
-    const device = navigator.bluetooth
-      .requestDevice({
-        filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
-      })
-      .then((device) => {
-        const server = device.gatt.connect().then(async (server) => {
-          const service = server
-            .getPrimaryService("00001805-0000-1000-8000-00805f9b34fb")
-            .then((service) => {
-              const characteristics2 = service
-                .getCharacteristic("00002a37-0000-1000-8000-00805f9b34fb")
-                .then((characteristic) => {
-                  const value = characteristic
-                    .readValue()
-                    .then(async (value) => {
-                      setfinishnumber(value.getUint8(0));
-                      console.log(value.getUint8(0));
-                      await server.disconnect();
-                    });
-                });
-            });
-        });
+    // const device = navigator.bluetooth
+    //   .requestDevice({
+    //     filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+    //   })
+    //   .then((device) => {
+    //     const server = device.gatt.connect().then(async (server) => {
+    //       const service = server
+    //         .getPrimaryService("00001805-0000-1000-8000-00805f9b34fb")
+    //         .then((service) => {
+    //           const characteristics2 = service
+    //             .getCharacteristic("00002a37-0000-1000-8000-00805f9b34fb")
+    //             .then((characteristic) => {
+    //               const value = characteristic
+    //                 .readValue()
+    //                 .then(async (value) => {
+    //                   setfinishnumber(value.getUint8(0));
+    //                   console.log(value.getUint8(0));
+    //                   await server.disconnect();
+    //                 });
+    //             });
+    //         });
+    //     });
 
-        console.log("Disconnected from server.");
-        return;
-      });
+    //     console.log("Disconnected from server.");
+    //     return;
+    //   });
     return;
   }
 
   function BeamsSimulator() {
+    console.log("Starting");
     let t = new Date();
     FinishCar(t, finishnumber);
   }
 
   function setNumber() {
-    //console.log("Number: ", finishnumber);
-    setfinishnumber(input.substring(1));
+    //console.log(selectedkey);
+    // setfinishnumber(parseInt(input.substring(1)));
+    FinishCarManual(new Date(), parseInt(input.substring(1)));
   }
 
   function FinishCar(car_time, finishnumbers) {
     if (finishnumbers === -1) {
+      finishes.unshift({
+        key: finishes.length + 1,
+        no: "--",
+        time:
+          car_time.getHours() +
+          ":" +
+          car_time.getMinutes() +
+          ":" +
+          car_time.getSeconds(),
+        start: "--",
+        stop: "--",
+        timevar: car_time,
+      });
+      onOpen();
       return;
     } else {
       console.log(car_time * 1000000);
@@ -201,6 +230,60 @@ const Finish = () => {
     return;
   }
 
+  function FinishCarManual(car_time, finishnumbers, key) {
+    if (finishnumbers === -1) {
+      return;
+    } else {
+      console.log(car_time * 1000000);
+      window.request
+        .request({
+          data: {
+            co_number: finishnumbers,
+            stage: selectedOption.value,
+            hour: car_time.getHours(),
+            minute: car_time.getMinutes(),
+            second: car_time.getSeconds(),
+            nano: car_time.getMilliseconds() * 1000000,
+            decimal: 3,
+          },
+          method: "PUT",
+          url: "http://localhost:8080/api/time",
+        })
+        .then((response) => {
+          console.log("Time started: ", response.data);
+          if (
+            finishes
+              .map((finish) => finish.key)
+              .indexOf(parseInt(key.currentKey)) != -1
+          ) {
+            finishes[
+              finishes
+                .map((finish) => finish.key)
+                .indexOf(parseInt(key.currentKey))
+            ].start = response.data.start_time;
+            finishes[
+              finishes
+                .map((finish) => finish.key)
+                .indexOf(parseInt(key.currentKey))
+            ].stop = response.data.total_time;
+            finishes[
+              finishes
+                .map((finish) => finish.key)
+                .indexOf(parseInt(key.currentKey))
+            ].no = finishnumbers;
+            setfinishnumber(-1);
+            //StartBluetooth();
+          }
+        })
+        .catch((error) => {
+          console.error("Error Uploading Start Time:", error);
+          throw error; // Rethrow the error to handle it in the caller
+        });
+    }
+
+    return;
+  }
+
   const options = [
     { value: 1, label: "Eleftherochori" },
     { value: 2, label: "Lamia" },
@@ -231,7 +314,15 @@ const Finish = () => {
     <div className="finish-container">
       <div className="times">
         <div className="row">
-          <Table isStriped aria-label="Stop Table">
+          <Table
+            selectionMode="single"
+            selectionBehavior="replace"
+            onSelectionChange={(key) => {
+              setselectedkey(parseInt(key.currentKey));
+            }}
+            isStriped
+            aria-label="Stop Table"
+          >
             <TableHeader>
               <TableColumn>No</TableColumn>
               <TableColumn>Start</TableColumn>
@@ -255,13 +346,15 @@ const Finish = () => {
                       <div
                         className="names"
                         style={{ color: "red" }}
-                        id={"name" + finish.no}>
+                        id={"name" + finish.no}
+                      >
                         {finish.no}
                       </div>
                       <div
                         className="stimes"
                         style={{ color: "red" }}
-                        id={"stimes" + finish.time}>
+                        id={"stimes" + finish.time}
+                      >
                         {finish.time}
                       </div>
                     </div>
@@ -297,21 +390,24 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -320,21 +416,24 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -343,21 +442,24 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -366,7 +468,8 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -376,7 +479,8 @@ const Finish = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -394,6 +498,28 @@ const Finish = () => {
           </MyButtons>
         </div>
       </div>
+      <Modal size={"xl"} isOpen={isOpen} onClose={onClose} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Missing Number
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  The Competitor Number Was Not Received. Please Select The Last
+                  Finish, Type The Number And Press Set Number.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="default" variant="light" onPress={onClose}>
+                  Ok
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

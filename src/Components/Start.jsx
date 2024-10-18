@@ -16,6 +16,17 @@ import {
   Button,
   Chip,
 } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Checkbox,
+  Input,
+  Link,
+} from "@nextui-org/react";
 
 const Start = () => {
   const [input, setinput] = useState("#");
@@ -26,6 +37,9 @@ const Start = () => {
       ":" +
       new Date().getSeconds()
   );
+  const [index, setindex] = useState();
+  const [cetime, setcetime] = useState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [starthour, setstarthour] = useState(new Date().getHours());
   const [startminute, setstartminute] = useState(new Date().getMinutes() + 1);
   const [start, setstart] = useState(starthour + ":" + startminute);
@@ -185,6 +199,12 @@ const Start = () => {
       t.setMinutes(startminute);
       t.setSeconds(0);
       const currentTime = t.toLocaleTimeString("en-US", option);
+      if (starts.map((start) => start.no).indexOf(input.substring(1)) != -1) {
+        setindex(starts.map((start) => start.no).indexOf(input.substring(1)));
+        setcetime(currentTime);
+        onOpen();
+        return;
+      }
       starts.unshift({
         no: input.substring(1),
         time: currentTime,
@@ -213,49 +233,80 @@ const Start = () => {
           console.error("Error Uploading Start Time:", error);
           throw error; // Rethrow the error to handle it in the caller
         });
-      const devicepromise = navigator.bluetooth.requestDevice({
-        filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
-      });
-      const timeoutpromise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log("Device not found.");
-          reject(new Error("Device not found."));
-        }, t.getTime() - new Date().getTime() - 10000);
-      });
-      const device = await Promise.race([devicepromise, timeoutpromise]);
+      // const devicepromise = navigator.bluetooth.requestDevice({
+      //   filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+      // });
+      // const timeoutpromise = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     console.log("Device not found.");
+      //     reject(new Error("Device not found."));
+      //   }, t.getTime() - new Date().getTime() - 10000);
+      // });
+      // const device = await Promise.race([devicepromise, timeoutpromise]);
 
-      const server = await device.gatt.connect();
-      const service = await server.getPrimaryService(
-        "00001805-0000-1000-8000-00805f9b34fb"
-      );
-      const characteristics = await service.getCharacteristic(
-        "00002a2b-0000-1000-8000-00805f9b34fb"
-      );
-      const characteristics2 = await service.getCharacteristic(
-        "00002a37-0000-1000-8000-00805f9b34fb"
-      );
-      const value = await characteristics2.readValue();
+      // const server = await device.gatt.connect();
+      // const service = await server.getPrimaryService(
+      //   "00001805-0000-1000-8000-00805f9b34fb"
+      // );
+      // const characteristics = await service.getCharacteristic(
+      //   "00002a2b-0000-1000-8000-00805f9b34fb"
+      // );
+      // const characteristics2 = await service.getCharacteristic(
+      //   "00002a37-0000-1000-8000-00805f9b34fb"
+      // );
+      // const value = await characteristics2.readValue();
 
-      if (value.getUint8(0) != input.substring(1)) {
-        return;
-      }
+      // if (value.getUint8(0) != input.substring(1)) {
+      //   return;
+      // }
 
-      console.log("Number matched");
+      // console.log("Number matched");
 
-      const encoder = new TextEncoder();
-      const timedata = encoder.encode(currentTime);
-      await characteristics.writeValue(timedata);
-      console.log("Time has been sent.", currentTime);
+      // const encoder = new TextEncoder();
+      // const timedata = encoder.encode(currentTime);
+      // await characteristics.writeValue(timedata);
+      // console.log("Time has been sent.", currentTime);
 
-      var array = [...unreceived];
-      array.splice(unreceived.indexOf(input.substring(1)), 1);
-      setunreceived(array);
-      await server.disconnect();
+      // var array = [...unreceived];
+      // array.splice(unreceived.indexOf(input.substring(1)), 1);
+      // setunreceived(array);
+      // await server.disconnect();
       console.log("Disconnected from server.");
       return;
     } catch (error) {
       console.error("Error", error);
     }
+  }
+
+  function replace() {
+    console.log(index);
+    console.log(cetime);
+    console.log(starts[index]);
+    window.request
+      .request({
+        data: {
+          co_number: parseInt(input.substring(1)),
+          stage: selectedOption.value,
+          hour: starthour,
+          minute: startminute,
+          second: 0,
+          nano: 0,
+          decimal: 3,
+        },
+        method: "PUT",
+        url: "http://localhost:8080/api/time/modifystart",
+      })
+      .then((response) => {
+        console.log("Time started: ", response.data);
+      })
+      .catch((error) => {
+        console.error("Error Uploading Start Time:", error);
+        throw error; // Rethrow the error to handle it in the caller
+      });
+    starts[index].time = cetime;
+
+    onClose();
+    uptime();
   }
 
   setInterval(() => {
@@ -317,7 +368,8 @@ const Start = () => {
                           className="capitalize"
                           color={"success"}
                           size="sm"
-                          variant="flat">
+                          variant="flat"
+                        >
                           Started
                         </Chip>
                       </TableCell>
@@ -344,7 +396,8 @@ const Start = () => {
                             className="capitalize"
                             color={"secondary"}
                             size="sm"
-                            variant="flat">
+                            variant="flat"
+                          >
                             Unreceived
                           </Chip>
                         </TableCell>
@@ -370,7 +423,8 @@ const Start = () => {
                             className="capitalize"
                             color={"warning"}
                             size="sm"
-                            variant="flat">
+                            variant="flat"
+                          >
                             Waiting To Start
                           </Chip>
                         </TableCell>
@@ -407,21 +461,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -430,21 +487,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -453,21 +513,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -476,7 +539,8 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -486,7 +550,8 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -520,6 +585,31 @@ const Start = () => {
           </div>
         </div>
       </div>
+      <Modal size={"xl"} isOpen={isOpen} onClose={onClose} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Time Already Exists!
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  There is already a time for this car number. Do you want to
+                  replace it?
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  No
+                </Button>
+                <Button color="primary" onPress={replace}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
