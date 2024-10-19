@@ -16,3 +16,14 @@ contextBridge.exposeInMainWorld("request", {
     return ipcRenderer.invoke("request", axios_request);
   },
 });
+
+contextBridge.exposeInMainWorld("electron", {
+  onWebSocketData: (callback) => ipcRenderer.on("websocket-data", callback),
+});
+
+contextBridge.exposeInMainWorld("socket", {
+  socket: (stage) => {
+    console.log(stage);
+    return ipcRenderer.invoke("socket", stage);
+  },
+});

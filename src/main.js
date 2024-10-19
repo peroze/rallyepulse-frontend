@@ -1,3 +1,6 @@
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+
 const { app, BrowserWindow, protocol, ipcMain } = require("electron");
 const axios = require("axios");
 const path = require("path");
@@ -28,6 +31,33 @@ const createWindow = () => {
 
   //mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
+  ipcMain.handle("socket", async (event, stage) => {
+    var finish;
+    const socket = new SockJS("http://localhost:8080/websocket");
+    const client = new Client({
+      webSocketFactory: () => socket,
+      reconnectDelay: 5000,
+      onConnect: () => {
+        console.log("/stoptime/" + stage + "/updates");
+        const subscription = client.subscribe(
+          "/stoptime/" + stage + "/updates",
+          (message) => {
+            const data = JSON.parse(message.body);
+            console.log("Stop Time Received: ", data);
+            //setfinishes((prev) => [...prev, data]);
+            if (mainWindow) {
+              mainWindow.webContents.send("websocket-data", receivedData);
+            }
+          }
+        );
+      },
+      onStompError: (frame) => {
+        console.error("Error: " + frame.headers["message"]);
+      },
+    });
+    client.activate();
+    return finish;
+  });
   var splash = new BrowserWindow({
     width: 500,
     height: 300,

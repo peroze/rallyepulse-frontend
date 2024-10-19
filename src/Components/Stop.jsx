@@ -6,6 +6,9 @@ import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+//import Stomp from "@stomp/stompjs";
+import { Client } from "@stomp/stompjs";
+
 import {
   Table,
   TableColumn,
@@ -17,7 +20,35 @@ import {
   Chip,
 } from "@nextui-org/react";
 
+import SockJS from "sockjs-client";
+
 const Stop = () => {
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  useEffect(() => {
+    if (selectedOption != undefined) {
+      window.socket.socket(selectedOption.value);
+      //const stompClient = Stomp.over(socket);
+      // stompClient.connect({}, (frame) => {
+      //   console.log("Connected to websocket" + frame);
+      // });
+    }
+  }, [selectedOption]);
+
+  const [socketData, setSocketData] = useState(null);
+
+  useEffect(() => {
+    if (selectedOption != undefined) {
+      window.electron.onWebSocketData((event, data) => {
+        console.log("Received WebSocket data from main process:", data);
+        setSocketData(data);
+      });
+      return () => {
+        window.electron.onWebSocketData(null);
+      };
+    }
+  }, []);
+
   const [time, settime] = useState(
     new Date().getHours() +
       ":" +
@@ -32,7 +63,6 @@ const Stop = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
-  const [selectedOption, setSelectedOption] = useState(null);
   const styles = {
     control: (base, state) => ({
       ...base,
