@@ -128,32 +128,32 @@ const Finish = () => {
 
   function StartBluetooth() {
     console.log("Start Bluetooth");
-    // const device = navigator.bluetooth
-    //   .requestDevice({
-    //     filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
-    //   })
-    //   .then((device) => {
-    //     const server = device.gatt.connect().then(async (server) => {
-    //       const service = server
-    //         .getPrimaryService("00001805-0000-1000-8000-00805f9b34fb")
-    //         .then((service) => {
-    //           const characteristics2 = service
-    //             .getCharacteristic("00002a37-0000-1000-8000-00805f9b34fb")
-    //             .then((characteristic) => {
-    //               const value = characteristic
-    //                 .readValue()
-    //                 .then(async (value) => {
-    //                   setfinishnumber(value.getUint8(0));
-    //                   console.log(value.getUint8(0));
-    //                   await server.disconnect();
-    //                 });
-    //             });
-    //         });
-    //     });
+    const device = navigator.bluetooth
+      .requestDevice({
+        filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
+      })
+      .then((device) => {
+        const server = device.gatt.connect().then(async (server) => {
+          const service = server
+            .getPrimaryService("00001805-0000-1000-8000-00805f9b34fb")
+            .then((service) => {
+              const characteristics2 = service
+                .getCharacteristic("00002a37-0000-1000-8000-00805f9b34fb")
+                .then((characteristic) => {
+                  const value = characteristic
+                    .readValue()
+                    .then(async (value) => {
+                      setfinishnumber(value.getUint8(0));
+                      console.log(value.getUint8(0));
+                      await server.disconnect();
+                    });
+                });
+            });
+        });
 
-    //     console.log("Disconnected from server.");
-    //     return;
-    //   });
+        console.log("Disconnected from server.");
+        return;
+      });
     return;
   }
 
@@ -188,43 +188,45 @@ const Finish = () => {
       return;
     } else {
       console.log(car_time * 1000000);
-      window.request
-        .request({
-          data: {
-            co_number: finishnumbers,
-            stage: selectedOption.value,
-            hour: car_time.getHours(),
-            minute: car_time.getMinutes(),
-            second: car_time.getSeconds(),
-            nano: car_time.getMilliseconds() * 1000000,
-            decimal: 3,
-          },
-          method: "PUT",
-          url: "http://localhost:8080/api/time",
-        })
-        .then((response) => {
-          console.log("Time started: ", response.data);
-          finishes.unshift({
-            key: finishes.length + 1,
-            no: finishnumber,
-            time:
-              car_time.getHours() +
-              ":" +
-              car_time.getMinutes() +
-              ":" +
-              car_time.getSeconds() +
-              ":" +
-              car_time.getMilliseconds(),
-            start: response.data.start_time,
-            stop: response.data.total_time,
+      setTimeout(() => {
+        window.request
+          .request({
+            data: {
+              co_number: finishnumbers,
+              stage: selectedOption.value,
+              hour: car_time.getHours(),
+              minute: car_time.getMinutes(),
+              second: car_time.getSeconds(),
+              nano: car_time.getMilliseconds() * 1000000,
+              decimal: 3,
+            },
+            method: "PUT",
+            url: "http://localhost:8080/api/time",
+          })
+          .then((response) => {
+            console.log("Time started: ", response.data);
+            finishes.unshift({
+              key: finishes.length + 1,
+              no: finishnumber,
+              time:
+                car_time.getHours() +
+                ":" +
+                car_time.getMinutes() +
+                ":" +
+                car_time.getSeconds() +
+                ":" +
+                car_time.getMilliseconds(),
+              start: response.data.start_time,
+              stop: response.data.total_time,
+            });
+            setfinishnumber(-1);
+            //StartBluetooth();
+          })
+          .catch((error) => {
+            console.error("Error Uploading Start Time:", error);
+            throw error; // Rethrow the error to handle it in the caller
           });
-          setfinishnumber(-1);
-          //StartBluetooth();
-        })
-        .catch((error) => {
-          console.error("Error Uploading Start Time:", error);
-          throw error; // Rethrow the error to handle it in the caller
-        });
+      }, 5000);
     }
 
     return;
@@ -321,8 +323,7 @@ const Finish = () => {
               setselectedkey(parseInt(key.currentKey));
             }}
             isStriped
-            aria-label="Stop Table"
-          >
+            aria-label="Stop Table">
             <TableHeader>
               <TableColumn>No</TableColumn>
               <TableColumn>Start</TableColumn>
@@ -331,7 +332,7 @@ const Finish = () => {
             </TableHeader>
             <TableBody emptyContent={"No cars to display."}>
               {finishes.map((finish) => {
-                if (true) {
+                if (finish.no != "--") {
                   return (
                     <TableRow key={finish.key}>
                       <TableCell>{finish.no}</TableCell>
@@ -342,22 +343,20 @@ const Finish = () => {
                   );
                 } else {
                   return (
-                    <div className="blines" key={finish.no}>
-                      <div
-                        className="names"
-                        style={{ color: "red" }}
-                        id={"name" + finish.no}
-                      >
+                    <TableRow className="text-red-700" key={finish.key}>
+                      <TableCell className="text-red-700">
                         {finish.no}
-                      </div>
-                      <div
-                        className="stimes"
-                        style={{ color: "red" }}
-                        id={"stimes" + finish.time}
-                      >
+                      </TableCell>
+                      <TableCell className="text-red-700">
+                        {finish.start}
+                      </TableCell>
+                      <TableCell className="text-red-700">
                         {finish.time}
-                      </div>
-                    </div>
+                      </TableCell>
+                      <TableCell className="text-red-700">
+                        {finish.stop}
+                      </TableCell>
+                    </TableRow>
                   );
                 }
               })}
@@ -390,24 +389,21 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -416,24 +412,21 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -442,24 +435,21 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -468,8 +458,7 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -479,8 +468,7 @@ const Finish = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
