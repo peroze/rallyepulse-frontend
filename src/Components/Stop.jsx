@@ -28,26 +28,22 @@ const Stop = () => {
   useEffect(() => {
     if (selectedOption != undefined) {
       window.socket.socket(selectedOption.value);
-      //const stompClient = Stomp.over(socket);
-      // stompClient.connect({}, (frame) => {
-      //   console.log("Connected to websocket" + frame);
-      // });
+      if (selectedOption != undefined) {
+        console.log("Here");
+        window.electron.onWebSocketData((event, data) => {
+          console.log("Received WebSocket data from main process:", data);
+          setSocketData(data);
+        });
+        return () => {
+          window.electron.onWebSocketData(null);
+        };
+      }
     }
   }, [selectedOption]);
 
   const [socketData, setSocketData] = useState(null);
 
-  useEffect(() => {
-    if (selectedOption != undefined) {
-      window.electron.onWebSocketData((event, data) => {
-        console.log("Received WebSocket data from main process:", data);
-        setSocketData(data);
-      });
-      return () => {
-        window.electron.onWebSocketData(null);
-      };
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   const [time, settime] = useState(
     new Date().getHours() +

@@ -1,5 +1,5 @@
-import { Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+const { Client } = require("@stomp/stompjs");
+const SockJS = require("sockjs-client");
 
 const { app, BrowserWindow, protocol, ipcMain } = require("electron");
 const axios = require("axios");
@@ -46,7 +46,7 @@ const createWindow = () => {
             console.log("Stop Time Received: ", data);
             //setfinishes((prev) => [...prev, data]);
             if (mainWindow) {
-              mainWindow.webContents.send("websocket-data", receivedData);
+              mainWindow.webContents.send("websocket-data", data);
             }
           }
         );
