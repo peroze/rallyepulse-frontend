@@ -33,6 +33,28 @@ const Stop = () => {
         window.electron.onWebSocketData((event, data) => {
           console.log("Received WebSocket data from main process:", data);
           setSocketData(data);
+          if (
+            finishes.map((finish) => finish.no).indexOf(data.id.competitorid) !=
+            -1
+          ) {
+            finishes[
+              finishes.map((finish) => finish.no).indexOf(data.id.competitorid)
+            ].finishtime = data.finish_time;
+            finishes[
+              finishes.map((finish) => finish.no).indexOf(data.id.competitorid)
+            ].starttime = data.start_time;
+            finishes[
+              finishes.map((finish) => finish.no).indexOf(data.id.competitorid)
+            ].stoptime = data.total_time;
+          } else {
+            finishes.unshift({
+              key: finishes.length + 1,
+              no: data.id.competitorid,
+              finishtime: data.finish_time,
+              starttime: data.start_time,
+              stoptime: data.total_time,
+            });
+          }
         });
         return () => {
           window.electron.onWebSocketData(null);
@@ -42,9 +64,6 @@ const Stop = () => {
   }, [selectedOption]);
 
   const [socketData, setSocketData] = useState(null);
-
-  useEffect(() => {}, []);
-
   const [time, settime] = useState(
     new Date().getHours() +
       ":" +

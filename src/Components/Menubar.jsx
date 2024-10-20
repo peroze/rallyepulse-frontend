@@ -7,7 +7,7 @@ import "../App.css";
 import { Component } from "react";
 import styles from "./Style/MenuBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilm } from "@fortawesome/free-solid-svg-icons";
+import { faFilm, faGear } from "@fortawesome/free-solid-svg-icons";
 import Container from "react-bootstrap/Container";
 import ReactRouterBootstrap, { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
@@ -21,6 +21,7 @@ import { faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
 import { faCircleStop } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { faHammer } from "@fortawesome/free-solid-svg-icons";
+import { faGears } from "@fortawesome/free-solid-svg-icons";
 
 function Menubar() {
   const navigate = useNavigate();
@@ -36,21 +37,31 @@ function Menubar() {
       document.getElementById("finish").classList.remove("selected");
       document.getElementById("stop").classList.remove("selected");
       document.getElementById("admin").classList.remove("selected");
+      document.getElementById("control").classList.remove("selected");
     } else if (show === "finish") {
       document.getElementById("finish").classList.add("selected");
       document.getElementById("start").classList.remove("selected");
       document.getElementById("stop").classList.remove("selected");
       document.getElementById("admin").classList.remove("selected");
+      document.getElementById("control").classList.remove("selected");
     } else if (show === "stop") {
       document.getElementById("stop").classList.add("selected");
       document.getElementById("start").classList.remove("selected");
       document.getElementById("finish").classList.remove("selected");
       document.getElementById("admin").classList.remove("selected");
+      document.getElementById("control").classList.remove("selected");
     } else if (show === "admin") {
       document.getElementById("start").classList.remove("selected");
       document.getElementById("finish").classList.remove("selected");
       document.getElementById("stop").classList.remove("selected");
       document.getElementById("admin").classList.add("selected");
+      document.getElementById("control").classList.remove("selected");
+    } else if (show === "control") {
+      document.getElementById("start").classList.remove("selected");
+      document.getElementById("finish").classList.remove("selected");
+      document.getElementById("stop").classList.remove("selected");
+      document.getElementById("admin").classList.remove("selected");
+      document.getElementById("control").classList.add("selected");
     }
 
     return;
@@ -149,6 +160,24 @@ function Menubar() {
                   }}
                 />
                 <p className="mbtext">Administrator</p>
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/control"
+                id="control"
+                onClick={() => {
+                  setselect("control");
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faGears}
+                  style={{
+                    color: "#ffffff",
+                    marginRight: "5px",
+                    fontSize: "40px",
+                  }}
+                />
+                <p className="mbtext">Rallye Control</p>
               </Nav.Link>
             </Nav>
           </Offcanvas.Body>

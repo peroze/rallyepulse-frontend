@@ -285,23 +285,76 @@ const Admin = () => {
           setcetime(currentTime);
           onOpen();
         } else {
-          console.log("here");
-          starts.unshift({
-            key: starts.length + 1,
-            no: input.substring(1),
-            starttime: currentTime,
-            finishtime: "-",
-            stoptime: "-",
-          });
+          window.request
+            .request({
+              data: {
+                co_number: parseInt(input.substring(1)),
+                stage: selectedOption.value,
+                hour: starthour,
+                minute: startminute,
+                second: 0,
+                nano: 0,
+                decimal: 3,
+              },
+              method: "POST",
+              url: "http://localhost:8080/api/time",
+            })
+            .then((response) => {
+              console.log("Time started: ", response.data);
+              starts.unshift({
+                key: starts.length + 1,
+                no: input.substring(1),
+                starttime: currentTime,
+                finishtime: "-",
+                stoptime: "-",
+              });
+            })
+            .catch((error) => {
+              console.error("Error Uploading Start Time:", error);
+              throw error; // Rethrow the error to handle it in the caller
+            });
         }
       } else if (mode.value === "stop") {
-        if (starts.indexOf(input.substring(1)) != -1) {
-          starts[
-            starts.map((start) => start.no).indexOf(input.substring(1))
-          ].finishtime = "-";
-          starts[
-            starts.map((start) => start.no).indexOf(input.substring(1))
-          ].stoptime = currentTime;
+        if (starts.map((start) => start.no).indexOf(input.substring(1)) != -1) {
+          if (
+            starts[starts.map((start) => start.no).indexOf(input.substring(1))]
+              .finishtime === "-"
+          ) {
+            starts[
+              starts.map((start) => start.no).indexOf(input.substring(1))
+            ].finishtime = currentTime;
+
+            window.request
+              .request({
+                data: {
+                  co_number: input.substring(1),
+                  stage: selectedOption.value,
+                  hour: starthour,
+                  minute: startminute,
+                  second: startsecond,
+                  nano: startmilli * 1000000,
+                  decimal: 3,
+                },
+                method: "PUT",
+                url: "http://localhost:8080/api/time/stop",
+              })
+              .then((response) => {
+                starts[
+                  starts.map((start) => start.no).indexOf(input.substring(1))
+                ].finishtime = response.data.finishtime;
+                starts[
+                  starts.map((start) => start.no).indexOf(input.substring(1))
+                ].stoptime = currentTime;
+              })
+              .catch((error) => {
+                console.error("Error Uploading Start Time:", error);
+                throw error; // Rethrow the error to handle it in the caller
+              });
+          } else {
+            setindex(starts.indexOf(input.substring(1)));
+            setcetime(currentTime);
+            onOpen();
+          }
         }
       } else if (mode.value === "finish") {
         if (starts.map((start) => start.no).indexOf(input.substring(1)) != -1) {
@@ -312,9 +365,30 @@ const Admin = () => {
             starts[
               starts.map((start) => start.no).indexOf(input.substring(1))
             ].finishtime = currentTime;
-            starts[
-              starts.map((start) => start.no).indexOf(input.substring(1))
-            ].stoptime = currentTime;
+
+            window.request
+              .request({
+                data: {
+                  co_number: input.substring(1),
+                  stage: selectedOption.value,
+                  hour: starthour,
+                  minute: startminute,
+                  second: startsecond,
+                  nano: startmilli * 1000000,
+                  decimal: 3,
+                },
+                method: "PUT",
+                url: "http://localhost:8080/api/time",
+              })
+              .then((response) => {
+                starts[
+                  starts.map((start) => start.no).indexOf(input.substring(1))
+                ].stoptime = response.data.total_time;
+              })
+              .catch((error) => {
+                console.error("Error Uploading Start Time:", error);
+                throw error; // Rethrow the error to handle it in the caller
+              });
           } else {
             setindex(starts.indexOf(input.substring(1)));
             setcetime(currentTime);
@@ -332,14 +406,92 @@ const Admin = () => {
   }
 
   function replace() {
-    if (mode === "start") {
-      starts[index].starttime = cetime;
-    } else if (mode === "stop") {
-      starts[index].finishtime = "--";
-      starts[index].stoptime = cetime;
-    } else if (mode === "finish") {
-      starts[index].finishtime = cetime;
-      starts[index].stoptime = cetime;
+    console.log(mode);
+    console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+
+    if (mode.value === "start") {
+      window.request
+        .request({
+          data: {
+            co_number: parseInt(input.substring(1)),
+            stage: selectedOption.value,
+            hour: starthour,
+            minute: startminute,
+            second: 0,
+            nano: 0,
+            decimal: 3,
+          },
+          method: "PUT",
+          url: "http://localhost:8080/api/time/modify",
+        })
+        .then((response) => {
+          console.log("Time started: ", response.data);
+          starts[index].starttime = cetime;
+          starts[index].finishtime = response.data.finish_time;
+          starts[index].stoptime = response.data.total_time;
+        })
+        .catch((error) => {
+          console.error("Error Uploading Start Time:", error);
+          throw error; // Rethrow the error to handle it in the caller
+        });
+    } else if (mode.value === "stop") {
+      console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+      window.request
+        .request({
+          data: {
+            co_number: input.substring(1),
+            stage: selectedOption.value,
+            hour: starthour,
+            minute: startminute,
+            second: startsecond,
+            nano: startmilli * 1000000,
+            decimal: 3,
+          },
+          method: "PUT",
+          url: "http://localhost:8080/api/time/stop",
+        })
+        .then((response) => {
+          console.log("TEREEEEEEEEEEEEETTTSTTTS");
+
+          starts[
+            starts.map((start) => start.no).indexOf(input.substring(1))
+          ].finishtime = response.data.finishtime;
+          starts[
+            starts.map((start) => start.no).indexOf(input.substring(1))
+          ].stoptime = cetime;
+        })
+        .catch((error) => {
+          console.error("Error Uploading Start Time:", error);
+          throw error; // Rethrow the error to handle it in the caller
+        });
+    } else if (mode.value === "finish") {
+      starts[
+        starts.map((start) => start.no).indexOf(input.substring(1))
+      ].finishtime = cetime;
+
+      window.request
+        .request({
+          data: {
+            co_number: input.substring(1),
+            stage: selectedOption.value,
+            hour: starthour,
+            minute: startminute,
+            second: startsecond,
+            nano: startmilli * 1000000,
+            decimal: 3,
+          },
+          method: "PUT",
+          url: "http://localhost:8080/api/time",
+        })
+        .then((response) => {
+          starts[
+            starts.map((start) => start.no).indexOf(input.substring(1))
+          ].stoptime = response.data.total_time;
+        })
+        .catch((error) => {
+          console.error("Error Uploading Start Time:", error);
+          throw error; // Rethrow the error to handle it in the caller
+        });
     }
 
     onClose();
@@ -417,21 +569,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -440,21 +595,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -463,21 +621,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -486,7 +647,8 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -496,7 +658,8 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -534,7 +697,8 @@ const Admin = () => {
               setpressed("hour");
               console.log(pressed);
               select("hour");
-            }}>
+            }}
+          >
             {String(starthour).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -544,7 +708,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("minute");
               select("minute");
-            }}>
+            }}
+          >
             {String(startminute).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -554,7 +719,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("second");
               select("second");
-            }}>
+            }}
+          >
             {String(startsecond).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -564,7 +730,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("milli");
               select("milli");
-            }}>
+            }}
+          >
             {String(startmilli).padStart(3, "0")}
           </h1>
         </div>
