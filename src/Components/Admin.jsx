@@ -35,7 +35,7 @@ const Admin = () => {
   const [input, setinput] = useState("#");
   const [index, setindex] = useState();
   const [cetime, setcetime] = useState();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { Open, onOpen, onClose } = useDisclosure();
   const [time, settime] = useState(
     new Date().getHours() +
       ":" +

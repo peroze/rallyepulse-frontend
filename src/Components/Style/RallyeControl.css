@@ -1,0 +1,229 @@
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
+  background-color: black !important;
+  overflow-y: hidden;
+}
+
+.tableAd {
+  height: 100vh !important;
+}
+
+.control-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 85vh;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 5px;
+  gap: 2%;
+}
+
+.control-container .times {
+  display: flex;
+  align-items: space-between;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  width: 30%;
+  height: 85vh !important;
+}
+
+.control-container .controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  width: 30% !important;
+  border-left: 3px solid white !important;
+  border-right: 3px solid white !important;
+  padding: 20px;
+  height: 85vh;
+}
+
+.control-container .number {
+  color: #ffd43b !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  width: 90px;
+  text-align: center;
+  border: 1px solid #ffd43b;
+  font-weight: bold !important;
+  color: #ffd43b;
+  border-radius: 50%;
+  font-size: 3rem;
+  margin-top: 2%;
+  background-color: black !important;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.control-container .startbuttom {
+  height: 90px;
+  background: green;
+  color: #ffd43b !important;
+  margin-top: 2%;
+  padding: 0.5rem;
+  font-size: 3rem !important;
+  font-weight: bold !important;
+  width: 100%;
+  cursor: pointer;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
+}
+
+.control-container .lines {
+  width: 350px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  gap: 10px !important;
+}
+
+.control-container .input {
+  border-bottom: 1px solid white;
+  padding: 0;
+  height: 70%;
+  margin: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.control-container .input h1 {
+  height: 100%;
+  color: white;
+  font-size: 3rem;
+  margin: 0;
+}
+
+.control-container .time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: 85vh;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.control-container .time .lines h1 {
+  color: white !important;
+  font-size: 4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.control-container .hourbutton {
+  background: grey;
+  color: white !important;
+  padding: 0.5rem;
+  font-size: 3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
+  width: 100%;
+}
+.control-container .starthour {
+  width: 100%;
+  cursor: pointer;
+}
+.control-container .hour {
+  width: 100%;
+}
+.control-container .pressed {
+  background-color: rgb(70, 70, 163);
+  border-radius: 5px;
+}
+.control-container .minute {
+  width: 100%;
+}
+.control-container .second {
+  width: 100%;
+}
+.control-container .milli {
+  width: 100%;
+}
+.control-container .lines h1 {
+  color: white !important;
+}
+
+.control-container .names {
+  text-align: start;
+  width: 20%;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.control-container .stimes {
+  text-align: start;
+  width: 20%;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.control-container .row {
+  margin-top: 5px;
+  height: 90vh;
+  display: flex;
+  width: 120%;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.control-container .blines {
+  width: 350px;
+  display: flex;
+  flex-wrap: wrap !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+  gap: 10px !important;
+}
+
+.control-container .select {
+  width: 100%;
+  font-size: 2rem;
+  background-color: #ffd43b;
+}
+
+.control-container .timeboard {
+  width: 400px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  overflow-y: scroll;
+  height: 79vh;
+}
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffd43b;
+  border-radius: 10px;
+}
+.control-container .cross {
+  text-align: center;
+  width: 10%;
+  font-size: 1.5rem;
+  color: white;
+}

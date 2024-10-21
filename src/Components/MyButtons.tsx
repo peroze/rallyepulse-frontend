@@ -7,6 +7,8 @@ export const MyButtons = extendVariants(Button, {
       olive: "text-[#000] bg-[#84cc16]",
       blue: "bg-[blue] text-[white]",
       red: "bg-[red] text-[white]",
+      green: "text-[#000] bg-[#4caf50]",
+      def: "text-[#000] bg-[#ffd43b]",
     },
     isDisabled: {
       true: "bg-[#eaeaea] text-[#000] opacity-50 cursor-not-allowed",
