@@ -19,8 +19,12 @@ contextBridge.exposeInMainWorld("request", {
 
 contextBridge.exposeInMainWorld("electron", {
   onWebSocketData: (callback) => {
-    console.log("In electron.js");
-    ipcRenderer.on("websocket-data", callback);
+    try {
+      console.log("In electron.js");
+      ipcRenderer.on("websocket-data", callback);
+    } catch (error) {
+      console.error("Error in onWebSocketData:", error);
+    }
   },
 });
 

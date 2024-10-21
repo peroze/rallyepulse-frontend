@@ -170,25 +170,26 @@ const Finish = () => {
   }
 
   function FinishCar(car_time, finishnumbers) {
-    if (finishnumbers === -1) {
-      finishes.unshift({
-        key: finishes.length + 1,
-        no: "--",
-        time:
-          car_time.getHours() +
-          ":" +
-          car_time.getMinutes() +
-          ":" +
-          car_time.getSeconds(),
-        start: "--",
-        stop: "--",
-        timevar: car_time,
-      });
-      onOpen();
-      return;
-    } else {
-      console.log(car_time * 1000000);
-      setTimeout(() => {
+    setTimeout(() => {
+      if (finishnumbers === -1) {
+        finishes.unshift({
+          key: finishes.length + 1,
+          no: "--",
+          time:
+            car_time.getHours() +
+            ":" +
+            car_time.getMinutes() +
+            ":" +
+            car_time.getSeconds(),
+          start: "--",
+          stop: "--",
+          timevar: car_time,
+        });
+        onOpen();
+        return;
+      } else {
+        console.log(car_time * 1000000);
+
         window.request
           .request({
             data: {
@@ -226,10 +227,8 @@ const Finish = () => {
             console.error("Error Uploading Start Time:", error);
             throw error; // Rethrow the error to handle it in the caller
           });
-      }, 5000);
-    }
-
-    return;
+      }
+    }, 5000);
   }
 
   function FinishCarManual(car_time, finishnumbers, key) {

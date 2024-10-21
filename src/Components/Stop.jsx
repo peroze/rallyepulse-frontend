@@ -26,40 +26,51 @@ const Stop = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
-    if (selectedOption != undefined) {
-      window.socket.socket(selectedOption.value);
+    try {
       if (selectedOption != undefined) {
-        console.log("Here");
-        window.electron.onWebSocketData((event, data) => {
-          console.log("Received WebSocket data from main process:", data);
-          setSocketData(data);
-          if (
-            finishes.map((finish) => finish.no).indexOf(data.id.competitorid) !=
-            -1
-          ) {
-            finishes[
-              finishes.map((finish) => finish.no).indexOf(data.id.competitorid)
-            ].finishtime = data.finish_time;
-            finishes[
-              finishes.map((finish) => finish.no).indexOf(data.id.competitorid)
-            ].starttime = data.start_time;
-            finishes[
-              finishes.map((finish) => finish.no).indexOf(data.id.competitorid)
-            ].stoptime = data.total_time;
-          } else {
-            finishes.unshift({
-              key: finishes.length + 1,
-              no: data.id.competitorid,
-              finishtime: data.finish_time,
-              starttime: data.start_time,
-              stoptime: data.total_time,
-            });
-          }
-        });
-        return () => {
-          window.electron.onWebSocketData(null);
-        };
+        window.socket.socket(selectedOption.value);
+        if (selectedOption != undefined) {
+          console.log("Here");
+          window.electron.onWebSocketData((event, data) => {
+            console.log("Received WebSocket data from main process:", data);
+            setSocketData(data);
+            if (
+              finishes
+                .map((finish) => finish.no)
+                .indexOf(data.id.competitorid) != -1
+            ) {
+              finishes[
+                finishes
+                  .map((finish) => finish.no)
+                  .indexOf(data.id.competitorid)
+              ].finishtime = data.finish_time;
+              finishes[
+                finishes
+                  .map((finish) => finish.no)
+                  .indexOf(data.id.competitorid)
+              ].starttime = data.start_time;
+              finishes[
+                finishes
+                  .map((finish) => finish.no)
+                  .indexOf(data.id.competitorid)
+              ].stoptime = data.total_time;
+            } else {
+              finishes.unshift({
+                key: finishes.length + 1,
+                no: data.id.competitorid,
+                finishtime: data.finish_time,
+                starttime: data.start_time,
+                stoptime: data.total_time,
+              });
+            }
+          });
+          return () => {
+            window.electron.onWebSocketData(null);
+          };
+        }
       }
+    } catch (error) {
+      console.error("Error connecting to WebSocket:", error);
     }
   }, [selectedOption]);
 
