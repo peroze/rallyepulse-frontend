@@ -99,8 +99,7 @@ const RallyeControl = () => {
         key="tab-panel"
         color={"warning"}
         aria-label="Tabs colors"
-        radius="full"
-      >
+        radius="full">
         <Tab
           key="results"
           title={
@@ -111,8 +110,7 @@ const RallyeControl = () => {
               />
               <span>Results</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
@@ -135,8 +133,7 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faIdCard} style={{ color: "#ffffff" }} />
               <span>Entry List</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
@@ -162,8 +159,7 @@ const RallyeControl = () => {
               />
               <span>Danger Zone</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card w-screen">
             <CardHeader title="Danger Zone" />
             <CardBody className="gap-4 h-full">
@@ -203,7 +199,7 @@ const RallyeControl = () => {
           )}
         </ModalContent>
       </Modal>
-      <Modal size={"xl"} open={isOpen2} onClose={onClose2} backdrop={"blur"}>
+      <Modal size={"xl"} isOpen={isOpen2} onClose={onClose2} backdrop={"blur"}>
         <ModalContent>
           {(onClose2) => (
             <>

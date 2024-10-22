@@ -134,6 +134,21 @@ body,
   gap: 5px;
   width: 100%;
 }
+
+.admin-container .hourbutton2 {
+  background: grey;
+  color: white !important;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
+  width: 50%;
+}
+
 .admin-container .starthour {
   width: 100%;
   cursor: pointer;
