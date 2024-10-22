@@ -8,6 +8,7 @@ import { faSquarePollHorizontal } from "@fortawesome/free-solid-svg-icons";
 import { MyButtons } from "./MyButtons.tsx";
 import Select from "react-select";
 import { useState, useEffect } from "react";
+import { Slider } from "@nextui-org/react";
 import {
   Table,
   TableColumn,
@@ -48,6 +49,12 @@ const RallyeControl = () => {
     isOpen: isOpen2,
     onOpen: onOpen2,
     onClose: onClose2,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpen3,
+    onOpen: onOpen3,
+    onClose: onClose3,
   } = useDisclosure();
 
   useEffect(() => {
@@ -91,6 +98,9 @@ const RallyeControl = () => {
     setSelectedModal("St");
     onOpen();
   }
+  function statlistclose() {
+    onClose3();
+  }
 
   return (
     <div className="control-container w-screen">
@@ -99,7 +109,8 @@ const RallyeControl = () => {
         key="tab-panel"
         color={"warning"}
         aria-label="Tabs colors"
-        radius="full">
+        radius="full"
+      >
         <Tab
           key="results"
           title={
@@ -110,12 +121,15 @@ const RallyeControl = () => {
               />
               <span>Results</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
               <MyButtons color="def">Temporary Results</MyButtons>
-              <MyButtons color="def">Issue Start List</MyButtons>
+              <MyButtons color="def" onClick={onOpen3}>
+                Issue Start List
+              </MyButtons>
               <MyButtons color="def">Add Rallye 2 Vehicles</MyButtons>
               <MyButtons color="def" onClick={onOpen2}>
                 Add Penalty
@@ -133,7 +147,8 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faIdCard} style={{ color: "#ffffff" }} />
               <span>Entry List</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
@@ -159,7 +174,8 @@ const RallyeControl = () => {
               />
               <span>Danger Zone</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card w-screen">
             <CardHeader title="Danger Zone" />
             <CardBody className="gap-4 h-full">
@@ -204,15 +220,59 @@ const RallyeControl = () => {
           {(onClose2) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h1> Issue Stage Result </h1>
+                <h1> Add Penalty </h1>
               </ModalHeader>
               <ModalBody>
-                <Select
-                  placeholder="Select Special Stage"
-                  options={specialStages}
-                  styles={styles}
-                  onChange={handlechange}
-                  className="select"
+                <Input
+                  type="text"
+                  label="Competitor's Number"
+                  placeholder="Enter Competitor's Number"
+                />
+                <Slider
+                  label="Add Minutes"
+                  showTooltip={true}
+                  step={1}
+                  maxValue={60}
+                  minValue={0}
+                  marks={[
+                    {
+                      value: 15,
+                      label: "15m",
+                    },
+                    {
+                      value: 30,
+                      label: "30m",
+                    },
+                    {
+                      value: 45,
+                      label: "45m",
+                    },
+                  ]}
+                  defaultValue={0}
+                  className="max-w-md"
+                />
+                <Slider
+                  label="Add Seconds"
+                  showTooltip={true}
+                  step={1}
+                  maxValue={60}
+                  minValue={0}
+                  marks={[
+                    {
+                      value: 15,
+                      label: "15s",
+                    },
+                    {
+                      value: 30,
+                      label: "30s",
+                    },
+                    {
+                      value: 45,
+                      label: "45s",
+                    },
+                  ]}
+                  defaultValue={0}
+                  className="max-w-md"
                 />
               </ModalBody>
               <ModalFooter>
@@ -220,6 +280,32 @@ const RallyeControl = () => {
                   No
                 </Button>
                 <Button color="primary" onPress={penaltyselectcloses}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal size={"xl"} isOpen={isOpen3} onClose={onClose3} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose3) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1> Issue Start List </h1>
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  type="text"
+                  label="Time Control"
+                  placeholder="Enter Time Control"
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose3}>
+                  No
+                </Button>
+                <Button color="primary" onPress={statlistclose}>
                   Yes
                 </Button>
               </ModalFooter>
