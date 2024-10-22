@@ -6,6 +6,7 @@ import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import {
   Table,
   TableColumn,
@@ -409,7 +410,8 @@ const Start = () => {
                           className="capitalize"
                           color={"success"}
                           size="sm"
-                          variant="flat">
+                          variant="flat"
+                        >
                           Started
                         </Chip>
                       </TableCell>
@@ -436,7 +438,8 @@ const Start = () => {
                             className="capitalize"
                             color={"secondary"}
                             size="sm"
-                            variant="flat">
+                            variant="flat"
+                          >
                             Unreceived
                           </Chip>
                         </TableCell>
@@ -462,7 +465,8 @@ const Start = () => {
                             className="capitalize"
                             color={"warning"}
                             size="sm"
-                            variant="flat">
+                            variant="flat"
+                          >
                             Waiting To Start
                           </Chip>
                         </TableCell>
@@ -499,21 +503,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -522,21 +529,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -545,21 +555,24 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -568,7 +581,8 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -578,7 +592,8 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -604,11 +619,11 @@ const Start = () => {
         </div>
 
         <div className="lines">
-          <div className="hourbutton" onClick={downtime}>
-            -
+          <div className="hourbutton rotate-180 bg-lime-500" onClick={downtime}>
+            <FontAwesomeIcon icon={faPlay} />
           </div>
-          <div className="hourbutton" onClick={uptime}>
-            +
+          <div className="hourbutton bg-lime-500" onClick={uptime}>
+            <FontAwesomeIcon icon={faPlay} />
           </div>
         </div>
       </div>

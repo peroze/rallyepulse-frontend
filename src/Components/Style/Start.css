@@ -117,9 +117,8 @@ body,
 }
 
 .start-container .hourbutton {
-  background: grey;
   color: white !important;
-  padding: 0.5rem;
+  padding: 0.9rem;
   font-size: 3rem;
   cursor: pointer;
   display: flex;

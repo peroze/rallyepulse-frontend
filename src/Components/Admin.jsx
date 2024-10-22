@@ -6,6 +6,11 @@ import { faDeleteLeft, faSquareMinus } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import timekeepingService from "../Services/timekeeping.service";
+import {
+  faBackward,
+  faForward,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 
 import {
   Table,
@@ -625,21 +630,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -648,21 +656,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -671,21 +682,24 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -694,7 +708,8 @@ const Admin = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -704,7 +719,8 @@ const Admin = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
@@ -742,7 +758,8 @@ const Admin = () => {
               setpressed("hour");
               console.log(pressed);
               select("hour");
-            }}>
+            }}
+          >
             {String(starthour).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -752,7 +769,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("minute");
               select("minute");
-            }}>
+            }}
+          >
             {String(startminute).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -762,7 +780,8 @@ const Admin = () => {
             onClick={() => {
               setpressed("second");
               select("second");
-            }}>
+            }}
+          >
             {String(startsecond).padStart(2, "0")}
           </h1>
           <h1 className="starthour">:</h1>
@@ -772,23 +791,24 @@ const Admin = () => {
             onClick={() => {
               setpressed("milli");
               select("milli");
-            }}>
+            }}
+          >
             {String(startmilli).padStart(3, "0")}
           </h1>
         </div>
 
         <div className="lines">
-          <div className="hourbutton2" onClick={jdowntime}>
-            - -
+          <div className="hourbutton2 bg-red-700" onClick={jdowntime}>
+            <FontAwesomeIcon icon={faBackward} />
           </div>
-          <div className="hourbutton" onClick={downtime}>
-            -
+          <div className="hourbutton rotate-180 bg-lime-500" onClick={downtime}>
+            <FontAwesomeIcon icon={faPlay} />
           </div>
-          <div className="hourbutton" onClick={uptime}>
-            +
+          <div className="hourbutton bg-lime-500" onClick={uptime}>
+            <FontAwesomeIcon icon={faPlay} />
           </div>
-          <div className="hourbutton2" onClick={juptime}>
-            + +
+          <div className="hourbutton2 bg-red-700" onClick={juptime}>
+            <FontAwesomeIcon icon={faForward} />
           </div>
         </div>
       </div>
