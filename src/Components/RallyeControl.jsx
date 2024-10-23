@@ -8,6 +8,7 @@ import { faSquarePollHorizontal } from "@fortawesome/free-solid-svg-icons";
 import { MyButtons } from "./MyButtons.tsx";
 import Select from "react-select";
 import { useState, useEffect } from "react";
+import MembersList from "./MembersList.jsx";
 import { Slider } from "@nextui-org/react";
 import {
   Table,
@@ -152,15 +153,7 @@ const RallyeControl = () => {
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed
-                elementum nunc, ut condimentum velit. Donec vel faucibus lectus,
-                non consectetur purus. Aliquam erat volutpat. Sed in est at
-                justo mollis pharetra. Sed sit amet mauris faucibus, faucibus
-                purus vel, pellentesque neque. Donec vel velit vel dui rutrum
-                tincidunt. Sed malesuada, mauris ut varius fringilla, risus
-                lectus consectetur justo, ac ultricies nisi metus non nunc.
-              </p>
+              <MembersList></MembersList>
             </CardBody>
           </Card>
         </Tab>

@@ -97,9 +97,9 @@ const Finish = () => {
 
   useEffect(() => {
     if (receive == false) {
-      setRecieve(receive + 1);
-      console.log(receive);
-      console.log("In Special Stages useEffect");
+      // setRecieve(receive + 1);
+      // console.log(receive);
+      // console.log("In Special Stages useEffect");
       window.request
         .request({
           method: "GET",
@@ -322,7 +322,8 @@ const Finish = () => {
               setselectedkey(parseInt(key.currentKey));
             }}
             isStriped
-            aria-label="Stop Table">
+            aria-label="Stop Table"
+          >
             <TableHeader>
               <TableColumn>No</TableColumn>
               <TableColumn>Start</TableColumn>
@@ -388,21 +389,24 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}>
+            }}
+          >
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}>
+            }}
+          >
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}>
+            }}
+          >
             3
           </div>
         </div>
@@ -411,21 +415,24 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}>
+            }}
+          >
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}>
+            }}
+          >
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}>
+            }}
+          >
             6
           </div>
         </div>
@@ -434,21 +441,24 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}>
+            }}
+          >
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}>
+            }}
+          >
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}>
+            }}
+          >
             9
           </div>
         </div>
@@ -457,7 +467,8 @@ const Finish = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}>
+            }}
+          >
             0
           </div>
           <div
@@ -467,7 +478,8 @@ const Finish = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}>
+            }}
+          >
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
