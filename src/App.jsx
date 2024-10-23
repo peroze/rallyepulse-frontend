@@ -10,7 +10,7 @@ import Stop from "./Components/Stop.jsx";
 import Admin from "./Components/Admin.jsx";
 import { NextUIProvider } from "@nextui-org/system";
 import RallyeControl from "./Components/RallyeControl.jsx";
-
+import Profile from "./Components/Profile.jsx";
 function App() {
   return (
     <NextUIProvider>
@@ -25,6 +25,7 @@ function App() {
             <Route exact path="/stop" element={<Stop />} />
             <Route exact path="/admin" element={<Admin />} />
             <Route exact path="/control" element={<RallyeControl />} />
+            <Route exact path="/profile" element={<Profile />} />
           </Routes>
         </Router>
       </main>
