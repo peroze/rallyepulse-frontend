@@ -103,8 +103,16 @@ export default function MembersList() {
     let filteredUsers = [...competitors];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((competitor) =>
-        competitor.driver.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter(
+        (competitor) =>
+          competitor.driver.toLowerCase().includes(filterValue.toLowerCase()) ||
+          competitor.codriver
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          competitor.vehicle
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          competitor.co_number.toString().includes(filterValue.toLowerCase())
       );
     }
 
@@ -224,7 +232,11 @@ export default function MembersList() {
                 <EyeIcon
                   onClick={() => {
                     navigate("/profile", {
-                      state: { userVar: competitor, update: false },
+                      state: {
+                        userVar: competitor,
+                        update: false,
+                        newEntry: false,
+                      },
                     });
                   }}
                 />
@@ -235,7 +247,11 @@ export default function MembersList() {
                 <EditIcon
                   onClick={() => {
                     navigate("/profile", {
-                      state: { userVar: competitor, update: true },
+                      state: {
+                        userVar: competitor,
+                        update: true,
+                        newEntry: false,
+                      },
                     });
                   }}
                 />
@@ -260,48 +276,45 @@ export default function MembersList() {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Αναζήτηση με Όνομα..."
+            placeholder="Search..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className=" sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  variant="flat"
-                >
-                  Κατάσταση
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Προσθήκη
+            <Button
+              color="primary"
+              endContent={<PlusIcon />}
+              onClick={() => {
+                navigate("/profile", {
+                  state: {
+                    userVar: {
+                      co_number: "",
+                      car_class: "",
+                      driver: "",
+                      codriver: "",
+                      vehicle: "",
+                      email: "",
+                      telephone: "",
+                      category: "",
+                    },
+                    update: true,
+                    newEntry: true,
+                  },
+                });
+              }}
+            >
+              Add New Competitor
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Συνολικά {competitors.length} Μέλοι
+            {competitors.length} Total Competitors
           </span>
           <label className="flex items-center text-default-400 text-small">
-            Μέλοι ανά σελίδα:
+            Competitors per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
