@@ -41,6 +41,8 @@ export default function MembersList() {
   const [receive, setRecieve] = useState(false);
   const [competitors, setCompetitors] = useState([]);
 
+  function deletecompetitor(competitor) {}
+
   useEffect(() => {
     if (receive == false) {
       // setRecieve(receive + 1);
@@ -187,7 +189,8 @@ export default function MembersList() {
           <User
             avatarProps={{ radius: "lg", src: competitor.avatar }}
             description={competitor.codriver}
-            name={competitor.driver}>
+            name={competitor.driver}
+          >
             {competitor.codriver}
           </User>
         );
@@ -247,7 +250,50 @@ export default function MembersList() {
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
+                <DeleteIcon
+                  onClick={() => {
+                    console.log(competitor.co_number);
+                    window.request
+                      .request({
+                        method: "DELETE",
+                        url:
+                          "http://localhost:8080/api/competitor/" +
+                          competitor.co_number,
+                      })
+                      .then((response) => {
+                        window.request
+                          .request({
+                            method: "GET",
+                            url: "http://localhost:8080/api/competitor/getCompetitors",
+                          })
+                          .then((response) => {
+                            console.log(
+                              "Special Stages received: ",
+                              response.data
+                            );
+                            let stageslocal = response.data;
+                            let competitorscopy = [];
+                            if (receive == false) {
+                              for (let i = 0; i < stageslocal.length; i++) {
+                                competitorscopy.push({
+                                  key: i,
+                                  co_number: stageslocal[i].co_number,
+                                  car_class: stageslocal[i].car_class,
+                                  driver: stageslocal[i].driver,
+                                  codriver: stageslocal[i].codriver,
+                                  vehicle: stageslocal[i].vehicle,
+                                  email: stageslocal[i].email,
+                                  telephone: stageslocal[i].telephone,
+                                  category: stageslocal[i].category,
+                                  passcode: stageslocal[i].passcode,
+                                });
+                              }
+                              setCompetitors(competitorscopy);
+                            }
+                          });
+                      });
+                  }}
+                />
               </span>
             </Tooltip>
           </div>
@@ -291,7 +337,8 @@ export default function MembersList() {
                     newEntry: true,
                   },
                 });
-              }}>
+              }}
+            >
               Add New Competitor
             </Button>
           </div>
@@ -304,7 +351,8 @@ export default function MembersList() {
             Competitors per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}>
+              onChange={onRowsPerPageChange}
+            >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -344,14 +392,16 @@ export default function MembersList() {
             isDisabled={pages === 1}
             size="sm"
             variant="flat"
-            onPress={onPreviousPage}>
+            onPress={onPreviousPage}
+          >
             Previous
           </Button>
           <Button
             isDisabled={pages === 1}
             size="sm"
             variant="flat"
-            onPress={onNextPage}>
+            onPress={onNextPage}
+          >
             Next
           </Button>
         </div>
@@ -373,13 +423,15 @@ export default function MembersList() {
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      onSortChange={setSortDescriptor}>
+      onSortChange={setSortDescriptor}
+    >
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn
             key={column.uid}
             align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}>
+            allowsSorting={column.sortable}
+          >
             {column.name}
           </TableColumn>
         )}

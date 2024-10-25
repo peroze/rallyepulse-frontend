@@ -1,0 +1,219 @@
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
+  background-color: black !important;
+  overflow-y: hidden;
+}
+
+.results-container {
+  display: flex;
+  width: 100vw;
+  height: 85vh;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
+.results-container .times {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap !important;
+  width: 50% !important;
+  height: 85vh !important;
+}
+
+.results-container .info {
+  display: flex;
+  border-left: 3px solid white;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  width: 20% !important;
+  height: 85vh !important;
+  flex-wrap: wrap;
+}
+
+.results-container .controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  width: 30% !important;
+  border-left: 3px solid white !important;
+  padding: 20px;
+  height: 85vh;
+}
+
+.results-container .number {
+  color: #ffd43b !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  width: 90px;
+  text-align: center;
+  border: 1px solid #ffd43b;
+  font-weight: bold !important;
+  color: #ffd43b;
+  border-radius: 50%;
+  font-size: 3rem;
+  margin-top: 2%;
+  background-color: black !important;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.results-container .startbuttom {
+  height: 90px;
+  background: green;
+  color: #ffd43b !important;
+  margin-top: 2%;
+  padding: 0.5rem;
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  width: 100%;
+  cursor: pointer;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
+}
+
+.results-container .lines {
+  width: 100% !important;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  gap: 10px !important;
+}
+
+.results-container .input {
+  border-bottom: 1px solid white;
+  padding: 0;
+  height: 70%;
+  margin: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.results-container .input h1 {
+  height: 100%;
+  color: white;
+  font-size: 3rem;
+  margin: 0;
+}
+
+.results-container .time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: 85vh;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.results-container .time .lines h1 {
+  color: white !important;
+  font-size: 4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.results-container .hourbutton {
+  background: grey;
+  color: white !important;
+  padding: 0.5rem;
+  font-size: 3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 5px;
+  gap: 5px;
+  width: 100%;
+}
+.results-container .starthour {
+  width: 100%;
+}
+.results-container .lines h1 {
+  color: white !important;
+}
+
+.results-container .names {
+  text-align: start;
+  width: 30%;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.results-container .stimes {
+  text-align: start;
+  width: 22%;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.results-container .times .row {
+  height: 85vh;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.results-container .blines {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+  gap: 10px !important;
+}
+
+.results-container .select {
+  width: 100%;
+  font-size: 2rem;
+  background-color: #ffd43b;
+}
+
+.results-container .timeboard {
+  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  overflow-y: scroll;
+  height: 79vh;
+}
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffd43b;
+  border-radius: 10px;
+}
+.results-container .cross {
+  text-align: center;
+  width: 10%;
+  font-size: 1.5rem;
+  color: white;
+}

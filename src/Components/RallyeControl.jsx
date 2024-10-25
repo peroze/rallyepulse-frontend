@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import MembersList from "./MembersList.jsx";
 import { Slider } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableColumn,
@@ -37,6 +38,8 @@ const RallyeControl = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+  const navigate = useNavigate();
+
   const location = useLocation();
   const [loading, setLoading] = React.useState(true);
   const data = location.state;
@@ -72,6 +75,18 @@ const RallyeControl = () => {
     isOpen: isOpen3,
     onOpen: onOpen3,
     onClose: onClose3,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpen4,
+    onOpen: onOpen4,
+    onClose: onClose4,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpen5,
+    onOpen: onOpen5,
+    onClose: onClose5,
   } = useDisclosure();
 
   useEffect(() => {
@@ -119,6 +134,36 @@ const RallyeControl = () => {
     onClose3();
   }
 
+  function finalresults() {
+    onClose5();
+    window.request
+      .request({
+        method: "POST",
+        url: "http://localhost:8080/api/rallyeinfo/final",
+      })
+      .then(() => {
+        window.request
+          .request({
+            method: "GET",
+            url: "http://localhost:8080/api/time/getOverallClassification",
+          })
+          .then((response) => {
+            navigate("/results", {
+              state: {
+                results: response.data,
+              },
+            });
+          });
+      });
+  }
+  function deleterallye() {
+    onClose4();
+    window.request.request({
+      method: "DELETE",
+      url: "http://localhost:8080/api/rallyeinfo/delete",
+    });
+  }
+
   return (
     <div className="control-container w-screen ">
       <Tabs
@@ -128,7 +173,8 @@ const RallyeControl = () => {
         aria-label="Tabs colors"
         radius="full"
         selectedKey={selected}
-        onSelectionChange={setSelected}>
+        onSelectionChange={setSelected}
+      >
         <Tab
           key="results"
           title={
@@ -139,7 +185,8 @@ const RallyeControl = () => {
               />
               <span>Results</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
@@ -164,7 +211,8 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faIdCard} style={{ color: "#ffffff" }} />
               <span>Entry List</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
@@ -182,12 +230,15 @@ const RallyeControl = () => {
               />
               <span>Danger Zone</span>
             </div>
-          }>
-          <Card className="control-card w-screen">
+          }
+        >
+          <Card className="control-card">
             <CardHeader title="Danger Zone" />
             <CardBody className="gap-4 h-full">
-              <MyButtons color="def">Final Results</MyButtons>
-              <MyButtons color="red">
+              <MyButtons color="red" onClick={onOpen5}>
+                Final Results
+              </MyButtons>
+              <MyButtons color="red" onClick={onOpen4}>
                 Delete Database And Start New Rallye
               </MyButtons>
             </CardBody>
@@ -313,6 +364,56 @@ const RallyeControl = () => {
                   No
                 </Button>
                 <Button color="primary" onPress={statlistclose}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal size={"xl"} isOpen={isOpen4} onClose={onClose4} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose4) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1>Rallye Deletion</h1>
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  Do you really want to delete this rallye? This action is
+                  permanent!
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose4}>
+                  No
+                </Button>
+                <Button color="primary" onPress={deleterallye}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal size={"xl"} isOpen={isOpen5} onClose={onClose5} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose5) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1> Issue Final Results </h1>
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  Do you really want to issue final results? This action is
+                  permanent!
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose5}>
+                  No
+                </Button>
+                <Button color="primary" onPress={finalresults}>
                   Yes
                 </Button>
               </ModalFooter>
