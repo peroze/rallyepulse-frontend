@@ -10,6 +10,7 @@ import Select from "react-select";
 import { useState, useEffect } from "react";
 import MembersList from "./MembersList.jsx";
 import { Slider } from "@nextui-org/react";
+import { useLocation } from "react-router-dom";
 import {
   Table,
   TableColumn,
@@ -36,6 +37,21 @@ const RallyeControl = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
+  const location = useLocation();
+  const [loading, setLoading] = React.useState(true);
+  const data = location.state;
+  const [selected, setSelected] = React.useState("results");
+  useEffect(() => {
+    if (loading == true) {
+      if (data != null) {
+        console.log("data received: ", selected);
+        setSelected(data.key);
+      } else {
+        setSelected("results");
+      }
+    }
+  }, [loading]);
+
   const [visibleSecondModal, setVisibleSecondModal] = useState(false);
   // const closeSecondModal = () => setVisibleSecondModal(false);
   // const openSecondModal = () => setVisibleSecondModal(true);
@@ -104,14 +120,15 @@ const RallyeControl = () => {
   }
 
   return (
-    <div className="control-container w-screen">
+    <div className="control-container w-screen ">
       <Tabs
         className="w-screen justify-center"
         key="tab-panel"
         color={"warning"}
         aria-label="Tabs colors"
         radius="full"
-      >
+        selectedKey={selected}
+        onSelectionChange={setSelected}>
         <Tab
           key="results"
           title={
@@ -122,8 +139,7 @@ const RallyeControl = () => {
               />
               <span>Results</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
@@ -148,8 +164,7 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faIdCard} style={{ color: "#ffffff" }} />
               <span>Entry List</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
@@ -167,8 +182,7 @@ const RallyeControl = () => {
               />
               <span>Danger Zone</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card w-screen">
             <CardHeader title="Danger Zone" />
             <CardBody className="gap-4 h-full">

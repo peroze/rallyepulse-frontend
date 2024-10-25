@@ -32,17 +32,6 @@ import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 
-const statusColorMap = {
-  ενεργός: "success",
-  ανενεργός: "danger",
-  vacation: "warning",
-};
-
-const statusOptions = [
-  { name: "ενεργός", uid: "ενεργός" },
-  { name: "ανενεργός", uid: "ανενεργός" },
-];
-
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -78,6 +67,7 @@ export default function MembersList() {
                 email: stageslocal[i].email,
                 telephone: stageslocal[i].telephone,
                 category: stageslocal[i].category,
+                passcode: stageslocal[i].passcode,
               });
             }
             setRecieve(true);
@@ -93,7 +83,7 @@ export default function MembersList() {
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
-    column: "name",
+    column: "co_number",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
@@ -131,7 +121,9 @@ export default function MembersList() {
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
       const first = a[sortDescriptor.column];
+      console.log(sortDescriptor);
       const second = b[sortDescriptor.column];
+      console.log(second);
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -170,8 +162,8 @@ export default function MembersList() {
   }, []);
 
   const columns = [
-    { name: "Number", uid: "number", sortable: true },
-    { name: "Crew", uid: "name", sortable: true },
+    { name: "Number", uid: "co_number", sortable: true },
+    { name: "Crew", uid: "driver", sortable: true },
     { name: "Vehicle", uid: "role" },
     { name: "Category", uid: "status" },
     { name: "Class", uid: "class" },
@@ -180,26 +172,22 @@ export default function MembersList() {
 
   const renderCell = React.useCallback((competitor, columnKey) => {
     const cellValue = competitor[columnKey];
-    console.log(cellValue);
-    console.log(columnKey);
-    console.log(competitor);
     switch (columnKey) {
-      case "number":
+      case "co_number":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
             <p className="text-bold text-sm capitalize text-default-400">
-              {competitor.co_number}
+              {competitor.key + 1}
             </p>
           </div>
         );
-      case "name":
+      case "driver":
         return (
           <User
             avatarProps={{ radius: "lg", src: competitor.avatar }}
             description={competitor.codriver}
-            name={competitor.driver}
-          >
+            name={competitor.driver}>
             {competitor.codriver}
           </User>
         );
@@ -303,8 +291,7 @@ export default function MembersList() {
                     newEntry: true,
                   },
                 });
-              }}
-            >
+              }}>
               Add New Competitor
             </Button>
           </div>
@@ -317,8 +304,7 @@ export default function MembersList() {
             Competitors per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-            >
+              onChange={onRowsPerPageChange}>
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -358,16 +344,14 @@ export default function MembersList() {
             isDisabled={pages === 1}
             size="sm"
             variant="flat"
-            onPress={onPreviousPage}
-          >
+            onPress={onPreviousPage}>
             Previous
           </Button>
           <Button
             isDisabled={pages === 1}
             size="sm"
             variant="flat"
-            onPress={onNextPage}
-          >
+            onPress={onNextPage}>
             Next
           </Button>
         </div>
@@ -389,15 +373,13 @@ export default function MembersList() {
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      onSortChange={setSortDescriptor}
-    >
+      onSortChange={setSortDescriptor}>
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn
             key={column.uid}
             align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
+            allowsSorting={column.sortable}>
             {column.name}
           </TableColumn>
         )}

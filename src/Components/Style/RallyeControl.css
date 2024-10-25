@@ -5,6 +5,7 @@ body,
   height: 100%;
   background-color: black !important;
   overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .tableAd {

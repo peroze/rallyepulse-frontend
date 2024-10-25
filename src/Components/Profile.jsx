@@ -25,58 +25,91 @@ export default function Profile() {
   const [category, setCategory] = React.useState(data.userVar.category);
   const [car_class, setCarClass] = React.useState(data.userVar.car_class);
   const [co_number, setCoNumber] = React.useState(data.userVar.co_number);
+  const [checks, setChecks] = React.useState({
+    driver: false,
+    codriver: false,
+    email: false,
+    telephone: false,
+    vehicle: false,
+    category: false,
+    car_class: false,
+    co_number: false,
+  });
   const navigate = useNavigate();
-  const validateEmail = (value) =>
-    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
-  const validateNumber = (value) => !isNaN(value);
-  const isInvalid = React.useMemo(() => {
-    if (email === "") return false;
 
+  const validateEmail = (value) =>
+    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i) || checks.email;
+  const validateNumber = (value) => !isNaN(value);
+
+  const isInvalid = React.useMemo(() => {
+    if (email === "" && checks.email) return true;
+    checks.email = true;
     return validateEmail(email) ? false : true;
   }, [email]);
-  const isInvalidNumber = React.useMemo(() => {
-    if (co_number === "") return false;
 
+  const isInvalidNumber = React.useMemo(() => {
+    if (co_number === "" && checks.co_number) return true;
+    checks.co_number = true;
     return validateNumber(co_number) ? false : true;
   }, [co_number]);
 
-  const validateTelephone = (value) => !isNaN(value) && value.length == 10;
-  const isInvalidTelephone = React.useMemo(() => {
-    if (telephone === "") return false;
+  const validateTelephone = (value) =>
+    (!isNaN(value) && value.length == 10) || checks.telephone;
 
+  const isInvalidTelephone = React.useMemo(() => {
+    if (telephone === "" && checks.telephone) return true;
+    checks.telephone = true;
     return validateTelephone(telephone) ? false : true;
   }, [telephone]);
 
   const isInvalidDriver = React.useMemo(() => {
-    if (driver === "") return false;
-    return true;
+    if (driver === "" && checks.driver) return true;
+    checks.driver = true;
+    return false;
   }, [driver]);
 
   const isInvalidCoDriver = React.useMemo(() => {
-    if (codriver === "") return false;
-
-    return true;
+    if (codriver === "" && checks.codriver) return true;
+    checks.codriver = true;
+    return false;
   }, [codriver]);
 
   const isInvalidClass = React.useMemo(() => {
-    if (car_class === "") return false;
-
-    return true;
+    if (car_class === "" && checks.car_class) return true;
+    checks.car_class = true;
+    return false;
   }, [car_class]);
 
   const isInvalidCategory = React.useMemo(() => {
-    if (category === "") return false;
-
-    return true;
+    if (category === "" && checks.category) return true;
+    checks.category = true;
+    return false;
   }, [category]);
 
   const isInvalidVehicle = React.useMemo(() => {
-    if (vehicle === "") return false;
-
-    return true;
+    if (vehicle === "" && checks.vehicle) return true;
+    checks.vehicle = true;
+    return false;
   }, [vehicle]);
 
   function onclick() {
+    navigate("/control", {
+      state: {
+        key: "entrylist",
+      },
+    });
+    if (
+      isInvalidVehicle ||
+      isInvalidCategory ||
+      isInvalid ||
+      isInvalidClass ||
+      isInvalidCoDriver ||
+      isInvalidNumber ||
+      isInvalidTelephone ||
+      isInvalidDriver
+    ) {
+      return;
+    }
     console.log(newEntry);
     if (newEntry) {
       window.request
@@ -100,7 +133,11 @@ export default function Profile() {
             { autoClose: 5000 }
           );
           console.log("Special Stages received: ", response.data);
-          navigate("/control");
+          navigate("/control", {
+            state: {
+              key: "entrylist",
+            },
+          });
         });
       // .catch((error) => {
       //   toast.error(
@@ -138,7 +175,6 @@ export default function Profile() {
           );
         });
     }
-
     return;
   }
 
@@ -165,11 +201,20 @@ export default function Profile() {
         <div className="flex items-center justify-center gap-20 w-full">
           <Input
             isDisabled
+            type="name"
+            label="Number"
+            variant="bordered"
+            value={user.co_number}
+          />
+          <Input
+            isDisabled
             type="tel"
             label="Telephone"
             variant="bordered"
             value={user.telephone}
           />
+        </div>
+        <div className="flex items-center justify-center gap-20 w-full">
           <Input
             isDisabled
             type="email"
@@ -177,8 +222,6 @@ export default function Profile() {
             variant="bordered"
             value={user.email}
           />
-        </div>
-        <div className="flex items-center justify-center gap-20 w-full">
           <Input
             isDisabled
             type="text"
@@ -186,6 +229,8 @@ export default function Profile() {
             variant="bordered"
             value={user.vehicle}
           />
+        </div>
+        <div className="flex items-center justify-center gap-20 w-full">
           <Input
             isDisabled
             type="text"
@@ -193,14 +238,21 @@ export default function Profile() {
             variant="bordered"
             value={user.category}
           />
-        </div>
-        <div className="flex items-center justify-center gap-20 w-full">
           <Input
             isDisabled
             type="text"
             label="Class"
             variant="bordered"
             value={user.car_class}
+          />
+        </div>
+        <div className="flex items-center justify-center gap-20 w-full">
+          <Input
+            isDisabled
+            type="text"
+            label="App Passcode"
+            variant="bordered"
+            value={user.passcode}
           />
         </div>
       </div>
@@ -309,9 +361,9 @@ export default function Profile() {
   }
 
   return (
-    <div className="profile-container flex  justify-between w-screen">
-      <div className=" w-4/12 p-5 gap-5 flex flex-col items-center h-fit backdrop-blur-sm bg-black/30 ml-5 mt-10 br-5 rounded-xl">
-        <div className="  flex justify-center items-center  ">
+    <div className="profile-container flex  justify-between w-screen overflow-y-scroll">
+      <div className=" w-4/12 p-5 gap-4 flex flex-col items-center h-fit backdrop-blur-sm bg-black/30 ml-5 mt-10 br-5 rounded-xl">
+        <div className="  flex justify-center items-center ">
           <Image
             isBlurred
             width={240}
@@ -319,6 +371,11 @@ export default function Profile() {
             alt="NextUI Album Cover"
           />
         </div>
+        {newEntry != undefined && (
+          <div className="">
+            <p className="font-bold text-xl">#{user.co_number}</p>{" "}
+          </div>
+        )}
         {newEntry != undefined && (
           <div className="">
             <p className="font-bold text-xl">{user.driver}</p>{" "}
