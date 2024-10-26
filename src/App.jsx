@@ -12,6 +12,9 @@ import { NextUIProvider } from "@nextui-org/system";
 import RallyeControl from "./Components/RallyeControl.jsx";
 import Profile from "./Components/Profile.jsx";
 import Results from "./Components/Results.jsx";
+import ResultsStage from "./Components/ResultsStage.jsx";
+import StartList from "./Components/StartList.jsx";
+
 function App() {
   return (
     <NextUIProvider>
@@ -28,6 +31,8 @@ function App() {
             <Route exact path="/control" element={<RallyeControl />} />
             <Route exact path="/profile" element={<Profile />} />
             <Route exact path="/results" element={<Results />} />
+            <Route exact path="/resultsstage" element={<ResultsStage />} />
+            <Route exact path="/startlist" element={<StartList />} />
           </Routes>
         </Router>
       </main>

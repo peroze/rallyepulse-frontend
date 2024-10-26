@@ -38,8 +38,16 @@ const RallyeControl = () => {
   const handlechange = (selectedOption) => {
     setSelectedOption(selectedOption);
   };
-  const navigate = useNavigate();
 
+  const [tc, settc] = useState();
+  const [tcday, settcday] = useState();
+  const [tcmonth, settcmonth] = useState();
+  const [tchour, settchour] = useState();
+  const [tcminute, settcminute] = useState();
+  const navigate = useNavigate();
+  const [penaltycar, setpenaltycar] = useState();
+  const [penaltyminutes, setpenaltyminutes] = useState(0);
+  const [penaltyseconds, setpenaltyseconds] = useState(0);
   const location = useLocation();
   const [loading, setLoading] = React.useState(true);
   const data = location.state;
@@ -55,6 +63,7 @@ const RallyeControl = () => {
     }
   }, [loading]);
 
+  const [ss, setss] = useState();
   const [visibleSecondModal, setVisibleSecondModal] = useState(false);
   // const closeSecondModal = () => setVisibleSecondModal(false);
   // const openSecondModal = () => setVisibleSecondModal(true);
@@ -64,6 +73,47 @@ const RallyeControl = () => {
   const [specialStages, setSpecialstages] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   // const { isOpen2, onOpen2, onClose2 } = useDisclosure();
+
+  const handlepenaltycarChange = (e) => {
+    setpenaltycar(e.target.value);
+    console.log(e.target.value);
+  };
+  const handlepenaltyminuteChange = (newvalue) => {
+    setpenaltyminutes(newvalue);
+    console.log(newvalue);
+  };
+  const handlepenaltysecondChange = (newvalue) => {
+    setpenaltyseconds(newvalue);
+    console.log(newvalue);
+  };
+  const handlestageselect = (newvalue) => {
+    setss(newvalue);
+    console.log(newvalue);
+  };
+  const handletc = (e) => {
+    settc(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handletcday = (e) => {
+    settcday(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handletcmonth = (e) => {
+    settcmonth(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handletchour = (e) => {
+    settchour(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handletcminute = (e) => {
+    settcminute(e.target.value);
+    console.log(e.target.value);
+  };
 
   const {
     isOpen: isOpen2,
@@ -87,6 +137,12 @@ const RallyeControl = () => {
     isOpen: isOpen5,
     onOpen: onOpen5,
     onClose: onClose5,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpen6,
+    onOpen: onOpen6,
+    onClose: onClose6,
   } = useDisclosure();
 
   useEffect(() => {
@@ -122,16 +178,73 @@ const RallyeControl = () => {
 
   function stageselectcloses() {
     onClose();
+    window.request
+      .request({
+        method: "GET",
+        url:
+          "http://localhost:8080/api/time/getStageClassification/" + ss.value,
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/resultsstage", {
+          state: {
+            results: response.data,
+            stage_name: ss.label,
+          },
+        });
+      });
   }
+
+  function temporaroverallselectcloses() {
+    onClose();
+    window.request
+      .request({
+        method: "GET",
+        url: "http://localhost:8080/api/time/getOverallByStage/" + ss.value,
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/results", {
+          state: {
+            results: response.data,
+            stage_name: ss.label,
+          },
+        });
+      });
+  }
+
   function penaltyselectcloses() {
     onClose2();
+    setpenalty();
   }
   function setselect() {
     setSelectedModal("St");
     onOpen();
   }
-  function statlistclose() {
+  function startlistchange() {
     onClose3();
+    if (tc == 0) {
+      window.request
+        .request({
+          method: "POST",
+          url: "http://localhost:8080/api/startlist",
+          data: {
+            hours: tchour,
+            minutes: tcminute,
+            month: tcmonth,
+            day: tcday,
+            tc: tc,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          navigate("/startlist", {
+            state: {
+              results: response.data,
+            },
+          });
+        });
+    }
   }
 
   function finalresults() {
@@ -164,6 +277,22 @@ const RallyeControl = () => {
     });
   }
 
+  function setpenalty() {
+    let time = new Date();
+    time = time.setHours(0, penaltyminutes, penaltyseconds, 0);
+    window.request
+      .request({
+        method: "PUT",
+        url: "http://localhost:8080/api/penalty/addPenalty",
+        data: {
+          co_number: penaltycar,
+          minutes: penaltyminutes,
+          seconds: penaltyseconds,
+        },
+      })
+      .then(() => {});
+  }
+
   return (
     <div className="control-container w-screen ">
       <Tabs
@@ -190,11 +319,12 @@ const RallyeControl = () => {
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
-              <MyButtons color="def">Temporary Results</MyButtons>
+              <MyButtons color="def" onClick={onOpen6}>
+                Temporary Results
+              </MyButtons>
               <MyButtons color="def" onClick={onOpen3}>
                 Issue Start List
               </MyButtons>
-              <MyButtons color="def">Add Rallye 2 Vehicles</MyButtons>
               <MyButtons color="def" onClick={onOpen2}>
                 Add Penalty
               </MyButtons>
@@ -257,7 +387,7 @@ const RallyeControl = () => {
                   placeholder="Select Special Stage"
                   options={specialStages}
                   styles={styles}
-                  onChange={handlechange}
+                  onChange={handlestageselect}
                   className="select"
                 />
               </ModalBody>
@@ -285,6 +415,8 @@ const RallyeControl = () => {
                   type="text"
                   label="Competitor's Number"
                   placeholder="Enter Competitor's Number"
+                  value={penaltycar}
+                  onChange={handlepenaltycarChange}
                 />
                 <Slider
                   label="Add Minutes"
@@ -292,6 +424,8 @@ const RallyeControl = () => {
                   step={1}
                   maxValue={60}
                   minValue={0}
+                  onChange={handlepenaltyminuteChange}
+                  value={penaltyminutes}
                   marks={[
                     {
                       value: 15,
@@ -306,12 +440,13 @@ const RallyeControl = () => {
                       label: "45m",
                     },
                   ]}
-                  defaultValue={0}
                   className="max-w-md"
                 />
                 <Slider
                   label="Add Seconds"
                   showTooltip={true}
+                  onChange={handlepenaltysecondChange}
+                  value={penaltyseconds}
                   step={1}
                   maxValue={60}
                   minValue={0}
@@ -329,7 +464,6 @@ const RallyeControl = () => {
                       label: "45s",
                     },
                   ]}
-                  defaultValue={0}
                   className="max-w-md"
                 />
               </ModalBody>
@@ -355,15 +489,45 @@ const RallyeControl = () => {
               <ModalBody>
                 <Input
                   type="text"
+                  value={tc}
+                  onChange={handletc}
                   label="Time Control"
                   placeholder="Enter Time Control"
+                />
+                <Input
+                  type="text"
+                  value={tcday}
+                  onChange={handletcday}
+                  label="Day Of Month"
+                  placeholder="Enter the Day of month"
+                />
+                <Input
+                  type="text"
+                  value={tcmonth}
+                  onChange={handletcmonth}
+                  label="Month of Year"
+                  placeholder="Enter the month of year"
+                />
+                <Input
+                  type="text"
+                  value={tchour}
+                  onChange={handletchour}
+                  label="Hour Of Day"
+                  placeholder="Enter the hour of day"
+                />
+                <Input
+                  type="text"
+                  value={tcminute}
+                  onChange={handletcminute}
+                  label="Minute Of Hour"
+                  placeholder="Enter the minute of hour"
                 />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose3}>
                   No
                 </Button>
-                <Button color="primary" onPress={statlistclose}>
+                <Button color="primary" onPress={startlistchange}>
                   Yes
                 </Button>
               </ModalFooter>
@@ -414,6 +578,34 @@ const RallyeControl = () => {
                   No
                 </Button>
                 <Button color="primary" onPress={finalresults}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal size={"xl"} isOpen={isOpen6} onClose={onClose6} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose6) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1> Issue Temporary Results </h1>
+              </ModalHeader>
+              <ModalBody>
+                <Select
+                  placeholder="Select Special Stage"
+                  options={specialStages}
+                  styles={styles}
+                  onChange={handlestageselect}
+                  className="select"
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose6}>
+                  No
+                </Button>
+                <Button color="primary" onPress={temporaroverallselectcloses}>
                   Yes
                 </Button>
               </ModalFooter>
