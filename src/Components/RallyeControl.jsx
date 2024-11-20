@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIdCard } from "@fortawesome/free-solid-svg-icons";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faSquarePollHorizontal } from "@fortawesome/free-solid-svg-icons";
+import { faRoad } from "@fortawesome/free-solid-svg-icons";
 import { MyButtons } from "./MyButtons.tsx";
 import Select from "react-select";
 import { useState, useEffect } from "react";
@@ -12,6 +13,7 @@ import MembersList from "./MembersList.jsx";
 import { Slider } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import StageList from "./StageList.jsx";
 import {
   Table,
   TableColumn,
@@ -44,6 +46,11 @@ const RallyeControl = () => {
   const [tcmonth, settcmonth] = useState();
   const [tchour, settchour] = useState();
   const [tcminute, settcminute] = useState();
+  const [rtitle, setrtitle] = useState();
+  const [rid, setrid] = useState();
+  const [rdate, setrdate] = useState();
+  const [rcity, setrcity] = useState();
+
   const navigate = useNavigate();
   const [penaltycar, setpenaltycar] = useState();
   const [penaltyminutes, setpenaltyminutes] = useState(0);
@@ -64,6 +71,7 @@ const RallyeControl = () => {
   }, [loading]);
 
   const [ss, setss] = useState();
+  const [catclass, setCatclass] = useState();
   const [visibleSecondModal, setVisibleSecondModal] = useState(false);
   // const closeSecondModal = () => setVisibleSecondModal(false);
   // const openSecondModal = () => setVisibleSecondModal(true);
@@ -76,6 +84,31 @@ const RallyeControl = () => {
 
   const handlepenaltycarChange = (e) => {
     setpenaltycar(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handlertitle = (e) => {
+    setrtitle(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handlerdate = (e) => {
+    setrdate(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handlercity = (e) => {
+    setrcity(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handlerid = (e) => {
+    setrid(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleclasscatselect = (e) => {
+    setCatclass(e.target.value);
     console.log(e.target.value);
   };
   const handlepenaltyminuteChange = (newvalue) => {
@@ -145,6 +178,18 @@ const RallyeControl = () => {
     onClose: onClose6,
   } = useDisclosure();
 
+  const {
+    isOpen: isOpen7,
+    onOpen: onOpen7,
+    onClose: onClose7,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpen8,
+    onOpen: onOpen8,
+    onClose: onClose8,
+  } = useDisclosure();
+
   useEffect(() => {
     if (receive == false) {
       setRecieve(receive + 1);
@@ -195,8 +240,62 @@ const RallyeControl = () => {
       });
   }
 
+  function stageselectcloses() {
+    onClose();
+    window.request
+      .request({
+        method: "GET",
+        url:
+          "http://localhost:8080/api/time/getStageClassification/" + ss.value,
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/resultsstage", {
+          state: {
+            results: response.data,
+            stage_name: ss.label,
+          },
+        });
+      });
+  }
+
+  function overallresults() {
+    window.request
+      .request({
+        method: "GET",
+        url: "http://localhost:8080/api/time/getOverallClassification",
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/results", {
+          state: {
+            results: response.data,
+            stage_name: "Overall",
+          },
+        });
+      });
+  }
+
   function temporaroverallselectcloses() {
     onClose();
+    window.request
+      .request({
+        method: "GET",
+        url: "http://localhost:8080/api/time/getOverallByStage/" + ss.value,
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/results", {
+          state: {
+            results: response.data,
+            stage_name: ss.label,
+          },
+        });
+      });
+  }
+
+  function catclassrsultcloses() {
+    onClose7();
     window.request
       .request({
         method: "GET",
@@ -269,12 +368,36 @@ const RallyeControl = () => {
           });
       });
   }
+
   function deleterallye() {
     onClose4();
-    window.request.request({
-      method: "DELETE",
-      url: "http://localhost:8080/api/rallyeinfo/delete",
-    });
+    window.request
+      .request({
+        method: "DELETE",
+        url: "http://localhost:8080/api/rallyeinfo/delete",
+      })
+      .then((response) => {
+        onOpen8();
+      });
+  }
+
+  function createrallye() {
+    onClose4();
+    window.request
+      .request({
+        method: "POST",
+        data: {
+          id: rid,
+          title: rtitle,
+          date: rdate,
+          city: rcity,
+          resulte: false,
+        },
+        url: "http://localhost:8080/api/rallyeinfo",
+      })
+      .then((response) => {
+        onClose8();
+      });
   }
 
   function setpenalty() {
@@ -302,8 +425,7 @@ const RallyeControl = () => {
         aria-label="Tabs colors"
         radius="full"
         selectedKey={selected}
-        onSelectionChange={setSelected}
-      >
+        onSelectionChange={setSelected}>
         <Tab
           key="results"
           title={
@@ -314,22 +436,27 @@ const RallyeControl = () => {
               />
               <span>Results</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
+              <MyButtons color="def" onClick={overallresults}>
+                Overall Results
+              </MyButtons>
               <MyButtons color="def" onClick={onOpen6}>
-                Temporary Results
+                Overall Results by Stage
+              </MyButtons>
+              <MyButtons color="def" onClick={onOpen7}>
+                Overall Results by Category/Class
+              </MyButtons>
+              <MyButtons color="def" onClick={onOpen}>
+                Stage Results
               </MyButtons>
               <MyButtons color="def" onClick={onOpen3}>
                 Issue Start List
               </MyButtons>
               <MyButtons color="def" onClick={onOpen2}>
                 Add Penalty
-              </MyButtons>
-              <MyButtons color="def" onClick={onOpen}>
-                Stage Results
               </MyButtons>
             </CardBody>
           </Card>
@@ -341,12 +468,26 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faIdCard} style={{ color: "#ffffff" }} />
               <span>Entry List</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
               <MembersList></MembersList>
+            </CardBody>
+          </Card>
+        </Tab>
+        <Tab
+          key="stages"
+          title={
+            <div className="flex items-center space-x-2">
+              <FontAwesomeIcon icon={faRoad} style={{ color: "#ffffff" }} />
+              <span>Special Stages</span>
+            </div>
+          }>
+          <Card className="control-card  w-screen">
+            <CardHeader title="Stage List" />
+            <CardBody>
+              <StageList></StageList>
             </CardBody>
           </Card>
         </Tab>
@@ -360,8 +501,7 @@ const RallyeControl = () => {
               />
               <span>Danger Zone</span>
             </div>
-          }
-        >
+          }>
           <Card className="control-card">
             <CardHeader title="Danger Zone" />
             <CardBody className="gap-4 h-full">
@@ -560,6 +700,55 @@ const RallyeControl = () => {
           )}
         </ModalContent>
       </Modal>
+      <Modal size={"xl"} isOpen={isOpen8} onClose={onClose8} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose4) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1>Rallye Creation</h1>
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  type="text"
+                  value={rid}
+                  onChange={handlerid}
+                  label="Id"
+                  placeholder="Enter the id of the event"
+                />
+                <Input
+                  type="text"
+                  value={rtitle}
+                  onChange={handlertitle}
+                  label="Rallye title"
+                  placeholder="Enter the title of the event"
+                />
+                <Input
+                  type="text"
+                  value={rdate}
+                  onChange={handlerdate}
+                  label="Date"
+                  placeholder="Enter the date of the event"
+                />
+                <Input
+                  type="text"
+                  value={rcity}
+                  onChange={handlercity}
+                  label="City"
+                  placeholder="Enter the City "
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose8}>
+                  No
+                </Button>
+                <Button color="primary" onPress={createrallye}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <Modal size={"xl"} isOpen={isOpen5} onClose={onClose5} backdrop={"blur"}>
         <ModalContent>
           {(onClose5) => (
@@ -590,7 +779,7 @@ const RallyeControl = () => {
           {(onClose6) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h1> Issue Temporary Results </h1>
+                <h1> Overall Results by Stage </h1>
               </ModalHeader>
               <ModalBody>
                 <Select
@@ -606,6 +795,34 @@ const RallyeControl = () => {
                   No
                 </Button>
                 <Button color="primary" onPress={temporaroverallselectcloses}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal size={"xl"} isOpen={isOpen7} onClose={onClose7} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose6) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1> Results by Category/Class </h1>
+              </ModalHeader>
+              <ModalBody>
+                <Select
+                  placeholder="Select Category or Class"
+                  options={specialStages}
+                  styles={styles}
+                  onChange={handleclasscatselect}
+                  className="select"
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose7}>
+                  No
+                </Button>
+                <Button color="primary" onPress={catclassrsultcloses}>
                   Yes
                 </Button>
               </ModalFooter>

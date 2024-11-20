@@ -11,8 +11,9 @@ body,
   display: flex;
   width: 100vw;
   height: 85vh;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
+  flex-direction: column;
   flex-wrap: nowrap;
 }
 

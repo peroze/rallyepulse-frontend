@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import React from "react";
-import styles from "./Style/Results.css";
+import styles from "./Style/Tables.css";
 
 import {
   Table,
@@ -26,9 +26,15 @@ const ResultsStage = () => {
       tempresults.push({
         pos: i + 1,
         co_number: data[i].id.competitorid,
+        driver: data[i].competitor.split("-")[0],
+        co_driver: data[i].competitor.split("-")[1],
+        category: data[i].category,
+        car_class: data[i].car_class,
         finish_time: data[i].finish_time,
         start_time: data[i].start_time,
         total_time: data[i].total_time,
+        difftoFirst: data[i].diffToFirst,
+        difftoPrevious: data[i].diffToPrevious,
       });
     }
     setfinals(tempresults);
@@ -36,7 +42,9 @@ const ResultsStage = () => {
 
   return (
     <div className="results-container">
-      <h1>{Stagename}</h1>
+      <h3 class="h-fit text-center w-100 m-10">
+        Stage Results of {location.state.stage_name}
+      </h3>
       <Table
         selectionMode="single"
         selectionBehavior="replace"
@@ -44,14 +52,19 @@ const ResultsStage = () => {
           setselectedkey(parseInt(key.currentKey));
         }}
         isStriped
-        aria-label="Stop Table"
-      >
+        aria-label="Stop Table">
         <TableHeader>
           <TableColumn>Pos</TableColumn>
           <TableColumn>Number</TableColumn>
+          <TableColumn>Driver</TableColumn>
+          <TableColumn>Co Driver</TableColumn>
+          <TableColumn>Category</TableColumn>
+          <TableColumn>Class</TableColumn>
           <TableColumn>Finish Time</TableColumn>
           <TableColumn>Start Time</TableColumn>
           <TableColumn>Total Time</TableColumn>
+          <TableColumn>Diff to First</TableColumn>
+          <TableColumn>Diff to Previous</TableColumn>
         </TableHeader>
         <TableBody emptyContent={"No cars to display."}>
           {finals.map((finish) => {
@@ -59,9 +72,15 @@ const ResultsStage = () => {
               <TableRow key={finish.pos}>
                 <TableCell>{finish.pos}</TableCell>
                 <TableCell>{finish.co_number}</TableCell>
+                <TableCell>{finish.driver}</TableCell>
+                <TableCell>{finish.codriver}</TableCell>
+                <TableCell>{finish.category}</TableCell>
+                <TableCell>{finish.car_class}</TableCell>
                 <TableCell>{finish.finish_time}</TableCell>
                 <TableCell>{finish.start_time}</TableCell>
                 <TableCell>{finish.total_time}</TableCell>
+                <TableCell>{finish.difftoFirst}</TableCell>
+                <TableCell>{finish.difftoPrevious}</TableCell>
               </TableRow>
             );
           })}

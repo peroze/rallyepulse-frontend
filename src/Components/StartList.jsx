@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import React from "react";
-import styles from "./Style/Results.css";
+import styles from "./Style/Tables.css";
 
 import {
   Table,
@@ -40,8 +40,7 @@ const StartList = () => {
           setselectedkey(parseInt(key.currentKey));
         }}
         isStriped
-        aria-label="Stop Table"
-      >
+        aria-label="Stop Table">
         <TableHeader>
           <TableColumn>Pos</TableColumn>
           <TableColumn>Number</TableColumn>
