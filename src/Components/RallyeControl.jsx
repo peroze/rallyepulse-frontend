@@ -47,6 +47,8 @@ const RallyeControl = () => {
   const [tchour, settchour] = useState();
   const [tcminute, settcminute] = useState();
   const [rtitle, setrtitle] = useState();
+  const [ntitle, setntitle] = useState();
+  const [nbody, setnbody] = useState();
   const [rid, setrid] = useState();
   const [rdate, setrdate] = useState();
   const [rcity, setrcity] = useState();
@@ -89,6 +91,14 @@ const RallyeControl = () => {
 
   const handlertitle = (e) => {
     setrtitle(e.target.value);
+    console.log(e.target.value);
+  };
+  const handlentitle = (e) => {
+    setntitle(e.target.value);
+    console.log(e.target.value);
+  };
+  const handlenbody = (e) => {
+    setnbody(e.target.value);
     console.log(e.target.value);
   };
 
@@ -188,6 +198,11 @@ const RallyeControl = () => {
     isOpen: isOpen8,
     onOpen: onOpen8,
     onClose: onClose8,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen9,
+    onOpen: onOpen9,
+    onClose: onClose9,
   } = useDisclosure();
 
   useEffect(() => {
@@ -400,6 +415,20 @@ const RallyeControl = () => {
       });
   }
 
+  function rallyenotification() {
+    onClose9();
+    window.request
+      .request({
+        method: "POST",
+        data: {
+          title: ntitle,
+          body: nbody,
+        },
+        url: "http://localhost:8080/api/notifications/send",
+      })
+      .then((response) => {});
+  }
+
   function setpenalty() {
     let time = new Date();
     time = time.setHours(0, penaltyminutes, penaltyseconds, 0);
@@ -425,7 +454,8 @@ const RallyeControl = () => {
         aria-label="Tabs colors"
         radius="full"
         selectedKey={selected}
-        onSelectionChange={setSelected}>
+        onSelectionChange={setSelected}
+      >
         <Tab
           key="results"
           title={
@@ -436,7 +466,8 @@ const RallyeControl = () => {
               />
               <span>Results</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card ">
             <CardHeader title="Results" />
             <CardBody className="gap-4 h-full">
@@ -468,7 +499,8 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faIdCard} style={{ color: "#ffffff" }} />
               <span>Entry List</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card  w-screen">
             <CardHeader title="Entry List" />
             <CardBody>
@@ -483,7 +515,8 @@ const RallyeControl = () => {
               <FontAwesomeIcon icon={faRoad} style={{ color: "#ffffff" }} />
               <span>Special Stages</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card  w-screen">
             <CardHeader title="Stage List" />
             <CardBody>
@@ -501,10 +534,14 @@ const RallyeControl = () => {
               />
               <span>Danger Zone</span>
             </div>
-          }>
+          }
+        >
           <Card className="control-card">
             <CardHeader title="Danger Zone" />
             <CardBody className="gap-4 h-full">
+              <MyButtons color="red" onClick={onOpen9}>
+                Send Notification
+              </MyButtons>
               <MyButtons color="red" onClick={onOpen5}>
                 Final Results
               </MyButtons>
@@ -823,6 +860,41 @@ const RallyeControl = () => {
                   No
                 </Button>
                 <Button color="primary" onPress={catclassrsultcloses}>
+                  Yes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal size={"xl"} isOpen={isOpen9} onClose={onClose9} backdrop={"blur"}>
+        <ModalContent>
+          {(onClose9) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1>Create Notification</h1>
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  type="text"
+                  value={ntitle}
+                  onChange={handlentitle}
+                  label="Notification title"
+                  placeholder="Enter the title of the notification"
+                />
+                <Input
+                  type="text"
+                  value={nbody}
+                  onChange={handlenbody}
+                  label="Notification body"
+                  placeholder="Enter the body of the notification"
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose9}>
+                  No
+                </Button>
+                <Button color="primary" onPress={rallyenotification}>
                   Yes
                 </Button>
               </ModalFooter>
