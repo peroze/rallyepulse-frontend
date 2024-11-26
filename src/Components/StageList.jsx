@@ -336,7 +336,8 @@ export default function StageList() {
             Stages per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}>
+              onChange={onRowsPerPageChange}
+            >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -376,14 +377,16 @@ export default function StageList() {
             isDisabled={pages === 1}
             size="sm"
             variant="flat"
-            onPress={onPreviousPage}>
+            onPress={onPreviousPage}
+          >
             Previous
           </Button>
           <Button
             isDisabled={pages === 1}
             size="sm"
             variant="flat"
-            onPress={onNextPage}>
+            onPress={onNextPage}
+          >
             Next
           </Button>
         </div>
@@ -406,20 +409,23 @@ export default function StageList() {
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
-        onSortChange={setSortDescriptor}>
+        onSortChange={setSortDescriptor}
+      >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}>
+              allowsSorting={column.sortable}
+            >
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
         <TableBody
           emptyContent={"There are no competitors"}
-          items={sortedItems}>
+          items={sortedItems}
+        >
           {(item) => (
             <TableRow key={item.key}>
               {(columnKey) => (
@@ -434,7 +440,7 @@ export default function StageList() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h1>Rallye Creation</h1>
+                <h1>Add Special Stage</h1>
               </ModalHeader>
               <ModalBody>
                 <Input
@@ -455,8 +461,8 @@ export default function StageList() {
                   type="text"
                   value={sdistance}
                   onChange={handlesdistance}
-                  label="Lenght"
-                  placeholder="Enter the lenght of the Stage "
+                  label="Length"
+                  placeholder="Enter the length of the Stage "
                 />
               </ModalBody>
               <ModalFooter>
