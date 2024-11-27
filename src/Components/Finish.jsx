@@ -30,6 +30,7 @@ import {
 } from "@nextui-org/react";
 
 const Finish = () => {
+  const [date, setdate] = useState();
   const [input, setinput] = useState("#");
   const [finishnumber, setfinishnumber] = useState(-1);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -160,13 +161,14 @@ const Finish = () => {
   function BeamsSimulator() {
     console.log("Starting");
     let t = new Date();
+    setdate(t);
     FinishCar(t, finishnumber);
   }
 
   function setNumber() {
     //console.log(selectedkey);
     // setfinishnumber(parseInt(input.substring(1)));
-    FinishCarManual(new Date(), parseInt(input.substring(1)));
+    FinishCarManual(date, parseInt(input.substring(1)));
   }
 
   function FinishCar(car_time, finishnumbers) {
@@ -252,29 +254,33 @@ const Finish = () => {
         })
         .then((response) => {
           console.log("Time started: ", response.data);
-          if (
-            finishes
-              .map((finish) => finish.key)
-              .indexOf(parseInt(key.currentKey)) != -1
-          ) {
-            finishes[
-              finishes
-                .map((finish) => finish.key)
-                .indexOf(parseInt(key.currentKey))
-            ].start = response.data.start_time;
-            finishes[
-              finishes
-                .map((finish) => finish.key)
-                .indexOf(parseInt(key.currentKey))
-            ].stop = response.data.total_time;
-            finishes[
-              finishes
-                .map((finish) => finish.key)
-                .indexOf(parseInt(key.currentKey))
-            ].no = finishnumbers;
-            setfinishnumber(-1);
-            //StartBluetooth();
-          }
+          // console.log(key.currentKey);
+          // if (
+          //   finishes
+          //     .map((finish) => finish.key)
+          //     .indexOf(parseInt(key.currentKey)) != -1
+          // ) {
+          //   finishes[
+          //     finishes
+          //       .map((finish) => finish.key)
+          //       .indexOf(parseInt(key.currentKey))
+          //   ].start = response.data.start_time;
+          //   finishes[
+          //     finishes
+          //       .map((finish) => finish.key)
+          //       .indexOf(parseInt(key.currentKey))
+          //   ].stop = response.data.total_time;
+          //   finishes[
+          //     finishes
+          //       .map((finish) => finish.key)
+          //       .indexOf(parseInt(key.currentKey))
+          //   ].no = finishnumbers;
+          //   setfinishnumber(-1);
+          //   //StartBluetooth();
+          // }
+          finishes[finishes.length - 1].no = finishnumbers;
+          finishes[finishes.length - 1].start = response.data.start_time;
+          finishes[finishes.length - 1].stop = response.data.total_time;
         })
         .catch((error) => {
           console.error("Error Uploading Start Time:", error);
