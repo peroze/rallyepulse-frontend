@@ -726,7 +726,7 @@ const Admin = () => {
         </div>
         <div className="lines">
           <div className="startbuttom" onClick={issuestart}>
-            Issue Start
+            Issue Time
           </div>
         </div>
       </div>
