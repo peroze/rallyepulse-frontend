@@ -234,6 +234,7 @@ const Start = () => {
           console.error("Error Uploading Start Time:", error);
           throw error; // Rethrow the error to handle it in the caller
         });
+      console.log("Device Waiting");
       const devicepromise = navigator.bluetooth.requestDevice({
         filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
       });
@@ -244,8 +245,9 @@ const Start = () => {
         }, t.getTime() - new Date().getTime() - 10000);
       });
       const device = await Promise.race([devicepromise, timeoutpromise]);
-
+      console.log("Device connected" + device.id);
       const server = await device.gatt.connect();
+      console.log("GATT connected" + server);
       const service = await server.getPrimaryService(
         "00001805-0000-1000-8000-00805f9b34fb"
       );
@@ -257,9 +259,10 @@ const Start = () => {
       );
       const value = await characteristics2.readValue();
 
-      if (value.getUint8(0) != input.substring(1)) {
-        return;
-      }
+      //if (value.getUint8(parseInt(input.substring(1))) != input.substring(1)) {
+      //console.log("Number does not match");
+      //return;
+      // }
 
       console.log("Number matched");
 
@@ -305,6 +308,7 @@ const Start = () => {
         const devicepromise = navigator.bluetooth.requestDevice({
           filters: [{ services: ["00001805-0000-1000-8000-00805f9b34fb"] }],
         });
+        console.log("hii");
         const timeoutpromise = new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log("Device not found.");
@@ -410,8 +414,7 @@ const Start = () => {
                           className="capitalize"
                           color={"success"}
                           size="sm"
-                          variant="flat"
-                        >
+                          variant="flat">
                           Started
                         </Chip>
                       </TableCell>
@@ -438,8 +441,7 @@ const Start = () => {
                             className="capitalize"
                             color={"secondary"}
                             size="sm"
-                            variant="flat"
-                          >
+                            variant="flat">
                             Unreceived
                           </Chip>
                         </TableCell>
@@ -465,8 +467,7 @@ const Start = () => {
                             className="capitalize"
                             color={"warning"}
                             size="sm"
-                            variant="flat"
-                          >
+                            variant="flat">
                             Waiting To Start
                           </Chip>
                         </TableCell>
@@ -503,24 +504,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 1);
-            }}
-          >
+            }}>
             1
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 2);
-            }}
-          >
+            }}>
             2
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 3);
-            }}
-          >
+            }}>
             3
           </div>
         </div>
@@ -529,24 +527,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 4);
-            }}
-          >
+            }}>
             4
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 5);
-            }}
-          >
+            }}>
             5
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 6);
-            }}
-          >
+            }}>
             6
           </div>
         </div>
@@ -555,24 +550,21 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 7);
-            }}
-          >
+            }}>
             7
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 8);
-            }}
-          >
+            }}>
             8
           </div>
           <div
             className="number"
             onClick={() => {
               setinput(input + "" + 9);
-            }}
-          >
+            }}>
             9
           </div>
         </div>
@@ -581,8 +573,7 @@ const Start = () => {
             className="number"
             onClick={() => {
               setinput(input + "" + 0);
-            }}
-          >
+            }}>
             0
           </div>
           <div
@@ -592,8 +583,7 @@ const Start = () => {
                 return;
               }
               setinput(input.slice(0, -1));
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faDeleteLeft} style={{ color: "#FFD43B" }} />
           </div>
         </div>
